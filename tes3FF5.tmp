@@ -1,0 +1,594 @@
+[gd_scene load_steps=2 format=3 uid="uid://p2ptqa1u1n1k"]
+
+[ext_resource type="Script" path="res://Client.gd" id="1_mtcsr"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mtcsr")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 802.0
+offset_top = 102.0
+offset_right = 1079.0
+offset_bottom = 197.0
+
+[node name="UserAccountLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 39.0
+offset_right = 146.0
+offset_bottom = 62.0
+text = "User Account"
+
+[node name="UserAccountText" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 39.0
+offset_right = 264.0
+offset_bottom = 62.0
+text = "user account"
+
+[node name="DisplayName" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 63.0
+offset_right = 148.0
+offset_bottom = 86.0
+text = "Display Name"
+
+[node name="DisplayNameText" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 63.0
+offset_right = 264.0
+offset_bottom = 86.0
+text = "user account"
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 296.0
+offset_top = 57.0
+offset_right = 683.0
+offset_bottom = 226.0
+
+[node name="Label" type="Label" parent="Panel2"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 20.0
+offset_right = 108.0
+offset_bottom = 43.0
+text = "Email"
+
+[node name="Label2" type="Label" parent="Panel2"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 69.0
+offset_right = 108.0
+offset_bottom = 92.0
+text = "Password"
+
+[node name="EmailInput" type="LineEdit" parent="Panel2"]
+layout_mode = 0
+offset_left = 122.0
+offset_top = 23.0
+offset_right = 347.0
+offset_bottom = 54.0
+text = "test@gmail.com"
+
+[node name="PasswordInput" type="LineEdit" parent="Panel2"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 63.0
+offset_right = 347.0
+offset_bottom = 94.0
+text = "password"
+
+[node name="LoginButton" type="Button" parent="Panel2"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = 114.0
+offset_right = 352.0
+offset_bottom = 157.0
+text = "Submit"
+
+[node name="Data Pannel" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 9.0
+offset_top = 508.0
+offset_right = 241.0
+offset_bottom = 637.0
+
+[node name="StoreData" type="Button" parent="Data Pannel"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 11.0
+offset_right = 199.0
+offset_bottom = 42.0
+text = "Store Data"
+
+[node name="GetData" type="Button" parent="Data Pannel"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 49.0
+offset_right = 137.0
+offset_bottom = 71.0
+text = "Get Data from Store"
+
+[node name="ListData" type="Button" parent="Data Pannel"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 90.0
+offset_right = 200.0
+offset_bottom = 121.0
+text = "List Data from Store"
+
+[node name="Panel3" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 15.0
+offset_top = 46.0
+offset_right = 268.0
+offset_bottom = 269.0
+
+[node name="JoinCreateMatch" type="Button" parent="Panel3"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 69.0
+offset_right = 230.0
+offset_bottom = 104.0
+text = "Join/Create"
+
+[node name="MatchName" type="LineEdit" parent="Panel3"]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 22.0
+offset_right = 243.0
+offset_bottom = 53.0
+
+[node name="Label" type="Label" parent="Panel3"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 11.0
+offset_right = 91.0
+offset_bottom = 60.0
+text = "Name Of 
+Match"
+
+[node name="Ping" type="Button" parent="Panel3"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 75.0
+offset_right = 102.0
+offset_bottom = 106.0
+text = "Ping"
+
+[node name="Matchmaking" type="Button" parent="Panel3"]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 131.0
+offset_right = 207.0
+offset_bottom = 166.0
+text = "Start Matchmaking"
+
+[node name="Button" type="Button" parent="Panel3"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 175.0
+offset_right = 201.0
+offset_bottom = 215.0
+text = "Start Game"
+
+[node name="Panel4" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 556.0
+offset_top = 272.0
+offset_right = 780.0
+offset_bottom = 436.0
+
+[node name="BlockFriends" type="Button" parent="Panel4"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 126.0
+offset_right = 102.0
+offset_bottom = 157.0
+text = "Block Friend"
+
+[node name="GetFriends" type="Button" parent="Panel4"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 84.0
+offset_right = 104.0
+offset_bottom = 115.0
+text = "Get Friends"
+
+[node name="AddFriendText" type="LineEdit" parent="Panel4"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 32.0
+offset_right = 201.0
+offset_bottom = 63.0
+placeholder_text = "Name of friend"
+
+[node name="AddFriend" type="Button" parent="Panel4"]
+layout_mode = 0
+offset_left = 106.0
+offset_top = 84.0
+offset_right = 207.0
+offset_bottom = 115.0
+text = "Add friend"
+
+[node name="RemoveFriend" type="Button" parent="Panel4/AddFriend"]
+layout_mode = 0
+offset_left = -4.0
+offset_top = 41.0
+offset_right = 105.0
+offset_bottom = 72.0
+text = "Delete friend"
+
+[node name="Panel4" type="Panel" parent="Panel4"]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 9.0
+offset_right = 470.0
+offset_bottom = 253.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel4/Panel4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel4/Panel4"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 30.0
+grow_horizontal = 2
+bbcode_enabled = true
+text = "[center][b]Friends"
+
+[node name="Panel5" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 10.0
+offset_top = 274.0
+offset_right = 234.0
+offset_bottom = 438.0
+
+[node name="CloseGroup" type="Button" parent="Panel5"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 126.0
+offset_right = 102.0
+offset_bottom = 157.0
+text = "Close Group"
+
+[node name="GetGroupMemebers" type="Button" parent="Panel5"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 84.0
+offset_right = 104.0
+offset_bottom = 115.0
+text = "Get Group"
+
+[node name="GroupName" type="LineEdit" parent="Panel5"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 32.0
+offset_right = 201.0
+offset_bottom = 63.0
+placeholder_text = "Name of group"
+
+[node name="CreateGroup" type="Button" parent="Panel5"]
+layout_mode = 0
+offset_left = 106.0
+offset_top = 84.0
+offset_right = 207.0
+offset_bottom = 115.0
+text = "Create Group"
+
+[node name="DeleteGroup" type="Button" parent="Panel5/CreateGroup"]
+layout_mode = 0
+offset_left = -4.0
+offset_top = 41.0
+offset_right = 105.0
+offset_bottom = 72.0
+text = "Delete Group"
+
+[node name="Panel4" type="Panel" parent="Panel5"]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 9.0
+offset_right = 470.0
+offset_bottom = 253.0
+
+[node name="GroupVBox" type="VBoxContainer" parent="Panel5/Panel4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel5/Panel4"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 30.0
+grow_horizontal = 2
+bbcode_enabled = true
+text = "[center][b]Group Memebers"
+
+[node name="Panel6" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 546.0
+offset_top = 250.0
+offset_right = 945.0
+offset_bottom = 658.0
+
+[node name="Label" type="Label" parent="Panel6"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 26.0
+offset_right = 61.0
+offset_bottom = 49.0
+text = "Name"
+
+[node name="Label2" type="Label" parent="Panel6"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 66.0
+offset_right = 105.0
+offset_bottom = 89.0
+text = "Description"
+
+[node name="GroupName" type="LineEdit" parent="Panel6"]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 26.0
+offset_right = 298.0
+offset_bottom = 57.0
+
+[node name="GroupDesc" type="LineEdit" parent="Panel6"]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 63.0
+offset_right = 298.0
+offset_bottom = 94.0
+
+[node name="GroupQuery" type="LineEdit" parent="Panel6"]
+layout_mode = 0
+offset_left = 157.0
+offset_top = 212.0
+offset_right = 298.0
+offset_bottom = 243.0
+placeholder_text = "Group Query"
+
+[node name="CreateGroup" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 153.0
+offset_top = 107.0
+offset_right = 265.0
+offset_bottom = 138.0
+text = "Create Group"
+
+[node name="AddUserToGroup" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 107.0
+offset_right = 140.0
+offset_bottom = 138.0
+text = "Join Group"
+
+[node name="AddUserToGroup2" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 147.0
+offset_right = 142.0
+offset_bottom = 201.0
+text = "Add User 
+To Group"
+
+[node name="List Groups" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 208.0
+offset_right = 142.0
+offset_bottom = 262.0
+text = "List Groups"
+
+[node name="CheckButton" type="CheckButton" parent="Panel6"]
+layout_mode = 0
+offset_left = 173.0
+offset_top = 164.0
+offset_right = 263.0
+offset_bottom = 195.0
+text = "Open"
+
+[node name="Panel" type="Panel" parent="Panel6"]
+layout_mode = 0
+offset_left = 412.0
+offset_top = 4.0
+offset_right = 656.0
+offset_bottom = 273.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel6/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UserToManage" type="LineEdit" parent="Panel6"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 277.0
+offset_right = 276.0
+offset_bottom = 308.0
+placeholder_text = "User To Manage"
+
+[node name="PromoteUser" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 319.0
+offset_right = 129.0
+offset_bottom = 355.0
+text = "Promote"
+
+[node name="KickUser" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 320.0
+offset_right = 248.0
+offset_bottom = 356.0
+text = "Kick"
+
+[node name="DemoteUser" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 364.0
+offset_right = 127.0
+offset_bottom = 400.0
+text = "Demote"
+
+[node name="BanUser" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 147.0
+offset_top = 364.0
+offset_right = 251.0
+offset_bottom = 400.0
+text = "Ban"
+
+[node name="LeaveGroup" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 285.0
+offset_top = 106.0
+offset_right = 391.0
+offset_bottom = 142.0
+text = "Leave Group"
+
+[node name="DeleteGroup" type="Button" parent="Panel6"]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 158.0
+offset_right = 384.0
+offset_bottom = 194.0
+text = "Leave Group"
+
+[node name="Panel7" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 355.0
+offset_right = 229.0
+offset_bottom = 613.0
+
+[node name="JoinGroupChatRoom" type="Button" parent="Panel7"]
+offset_left = 59.0
+offset_top = 109.0
+offset_right = 189.0
+offset_bottom = 153.0
+text = "Join Group Chat"
+
+[node name="JoinChatRoom" type="Button" parent="Panel7"]
+layout_mode = 0
+offset_left = 63.0
+offset_top = 57.0
+offset_right = 173.0
+offset_bottom = 101.0
+text = "Join Chat"
+
+[node name="ChatName" type="LineEdit" parent="Panel7"]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 13.0
+offset_right = 199.0
+offset_bottom = 44.0
+placeholder_text = "Chat Name"
+
+[node name="Chat" type="Panel" parent="Panel7"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = 3.0
+offset_right = 536.0
+offset_bottom = 255.0
+
+[node name="ChatText" type="LineEdit" parent="Panel7/Chat"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = -82.0
+grow_horizontal = 2
+grow_vertical = 0
+placeholder_text = "Chat Text Here"
+
+[node name="SubmitChat" type="Button" parent="Panel7/Chat"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -33.0
+grow_horizontal = 0
+grow_vertical = 0
+text = ">"
+
+[node name="ChatTextBox" type="TextEdit" parent="Panel7/Chat"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+editable = false
+wrap_mode = 1
+
+[connection signal="button_down" from="Panel2/LoginButton" to="." method="_on_login_button_button_down"]
+[connection signal="button_down" from="Data Pannel/StoreData" to="." method="_on_store_data_button_down"]
+[connection signal="button_down" from="Data Pannel/GetData" to="." method="_on_get_data_button_down"]
+[connection signal="button_down" from="Data Pannel/ListData" to="." method="_on_list_data_button_down"]
+[connection signal="button_down" from="Panel3/JoinCreateMatch" to="." method="_on_join_create_match_button_down"]
+[connection signal="button_down" from="Panel3/Ping" to="." method="_on_ping_button_down"]
+[connection signal="button_down" from="Panel3/Matchmaking" to="." method="_on_matchmaking_button_down"]
+[connection signal="button_down" from="Panel3/Button" to="." method="_on_button_button_down"]
+[connection signal="button_down" from="Panel4/BlockFriends" to="." method="_on_block_friends_button_down"]
+[connection signal="button_down" from="Panel4/GetFriends" to="." method="_on_get_friends_button_down"]
+[connection signal="button_down" from="Panel4/AddFriend" to="." method="_on_add_friend_button_down"]
+[connection signal="button_down" from="Panel4/AddFriend/RemoveFriend" to="." method="_on_remove_friend_button_down"]
+[connection signal="button_down" from="Panel5/GetGroupMemebers" to="." method="_on_get_group_memebers_button_down"]
+[connection signal="button_down" from="Panel5/CreateGroup" to="." method="_on_create_group_button_down"]
+[connection signal="button_down" from="Panel6/CreateGroup" to="." method="_on_create_group_button_down"]
+[connection signal="button_down" from="Panel6/AddUserToGroup" to="." method="_on_add_user_to_group_button_down"]
+[connection signal="button_down" from="Panel6/AddUserToGroup2" to="." method="_on_add_user_to_group_2_button_down"]
+[connection signal="button_down" from="Panel6/List Groups" to="." method="_on_list_groups_button_down"]
+[connection signal="toggled" from="Panel6/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="button_down" from="Panel6/PromoteUser" to="." method="_on_promote_user_button_down"]
+[connection signal="button_down" from="Panel6/KickUser" to="." method="_on_kick_user_button_down"]
+[connection signal="button_down" from="Panel6/DemoteUser" to="." method="_on_demote_user_button_down"]
+[connection signal="button_down" from="Panel6/BanUser" to="." method="_on_ban_user_button_down"]
+[connection signal="button_down" from="Panel6/LeaveGroup" to="." method="_on_leave_group_button_down"]
+[connection signal="button_down" from="Panel6/DeleteGroup" to="." method="_on_delete_group_button_down"]
+[connection signal="button_down" from="Panel7/JoinGroupChatRoom" to="." method="_on_join_group_chat_room_button_down"]
+[connection signal="button_down" from="Panel7/JoinChatRoom" to="." method="_on_join_chat_room_button_down"]
+[connection signal="button_down" from="Panel7/Chat/SubmitChat" to="." method="_on_submit_chat_button_down"]
