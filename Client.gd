@@ -9,6 +9,7 @@ var multiplayerBridge : NakamaMultiplayerBridge
 
 var selectedGroup
 var currentChannel
+var chatChannels := {}
 
 static var Players = {}
 
@@ -18,7 +19,7 @@ signal OnStartGame()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
+	client = Nakama.create_client("defaultkey", "198.199.80.118", 7350, "http")
 	
 	pass # Replace with function body.
 
@@ -73,7 +74,7 @@ func _on_login_button_button_down():
 	#$Panel/DisplayNameText.text = account.user.display_name
 	
 	setupMultiplayerBridge()
-	subToFriendsChannels()
+	subToFriendChannels()
 	pass # Replace with function body.
 
 
@@ -361,7 +362,7 @@ func _on_join_chat_room_button_down():
 func onChannelMessage(message : NakamaAPI.ApiChannelMessage):
 	var content = JSON.parse_string(message.content)
 	if content.type == 0:
-		$Panel7/Chat/ChatTextBox.text += message.username + ": " + str(content.message) + "\n"
+		$Panel7/Chat/TabContainer.get_node(content.id).text += message.username + ": " + str(content.message) + "\n"
 	elif content.type == 1 && party == null:
 		$Panel8/Panel2.show()
 		party = {"id" : content.partyID}
@@ -371,6 +372,7 @@ func onChannelMessage(message : NakamaAPI.ApiChannelMessage):
 func _on_submit_chat_button_down():
 	await socket.write_chat_message_async(currentChannel.id, {
 		 "message" : $Panel7/Chat/ChatText.text,
+		"id" : chatChannels[currentChannel.id].label,
 		"type" : 0
 		})
 	pass # Replace with function body.
@@ -381,23 +383,47 @@ func _on_join_group_chat_room_button_down():
 	currentChannel = await socket.join_chat_async(selectedGroup.id, type, true, false)
 	
 	print("channel id: " + currentChannel.id)
+	chatChannels[selectedGroup.id] = {
+		"channel" : currentChannel,
+		"label" : "Group Chat"
+		}
+	var currentEdit = TextEdit.new()
+	currentEdit.name = "currentGroup"
+	$Panel7/Chat/TabContainer.add_child(currentEdit)
+	currentEdit.text = await listMessages(currentChannel)
+	$Panel7/Chat/TabContainer.tab_changed.connect(onChatTabChanged.bind(selectedGroup.id))
+	
+	pass # Replace with function body.
+
+func onChatTabChanged(index, channelID):
+	currentChannel = chatChannels[channelID].channel
+	pass
+	
+func listMessages(currentChannel):
 	
 	var result = await  client.list_channel_messages_async(session, currentChannel.id, 100, true)
-	
+	var text = ""
 	for message in result.messages:
 		if(message.content != "{}"):
 			var content = JSON.parse_string(message.content)
 		
-			$Panel7/Chat/ChatTextBox.text += message.username + ": " + str(content.message) + "\n"
+			text += message.username + ": " + str(content.message) + "\n"
+	return text
 	
-	pass # Replace with function body.
-	
-
-func subToFriendsChannels():
+func subToFriendChannels():
 	var result = await client.list_friends_async(session)
 	for i in result.friends:
 		var type = NakamaSocket.ChannelType.DirectMessage
-		await socket.join_chat_async(i.user.id, type, true, false)
+		var channel = await socket.join_chat_async(i.user.id, type, true, false)
+		chatChannels[channel.id] = {
+		"channel" : channel,
+		"label" : i.user.username
+		} 
+		var currentEdit = TextEdit.new()
+		currentEdit.name = i.user.username
+		$Panel7/Chat/TabContainer.add_child(currentEdit)
+		currentEdit.text = await listMessages(channel)
+		$Panel7/Chat/TabContainer.tab_changed.connect(onChatTabChanged.bind(channel.id))
 
 func _on_join_direct_chat_button_down():
 	var type = NakamaSocket.ChannelType.DirectMessage
