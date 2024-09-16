@@ -19,7 +19,8 @@ signal OnStartGame()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("defaultkey", "198.199.80.118", 7350, "http")
+	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
+	#client = Nakama.create_client("defaultkey", "198.199.80.118", 7350, "http")
 	
 	pass # Replace with function body.
 
@@ -219,12 +220,11 @@ func _on_get_friends_button_down():
 		print(i)
 		var currentButton = Button.new()
 		container.add_child(currentButton)
-		currentButton.text = "Invite"
-		currentButton.button_down.connect(onInviteToParty.bind(i))
+		currentButton.text = "Trade"
+		currentButton.button_down.connect(trade.bind(i.user.id))
 		$Panel4/Panel4/VBoxContainer.add_child(container)
 		
 	pass # Replace with function body.
-
 
 func _on_remove_friend_button_down():
 	var result = await client.delete_friends_async(session,[], [$Panel4/AddFriendText.text])
@@ -407,7 +407,7 @@ func listMessages(currentChannel):
 		if(message.content != "{}"):
 			var content = JSON.parse_string(message.content)
 		
-			text += message.username + ": " + str(content.message) + "\n"
+			#text += message.username + ": " + str(content.message) + "\n"
 	return text
 	
 func subToFriendChannels():
@@ -476,3 +476,194 @@ func _on_join_party_no_button_down():
 
 func onPartyPresence(presence : NakamaRTAPI.PartyPresenceEvent):
 	print("JOINED PARTY " + presence.party_id)
+
+
+
+# Function to add an item to the player's inventory
+func add_item_to_inventory(item_data: Dictionary):
+	var payload = JSON.stringify(item_data)
+	var rpc_future = await client.rpc_async(session, "add_item_to_inventory", payload)
+	
+
+	var response = JSON.parse_string(rpc_future.payload)
+	print("Item added with ID: %s" % response.item_id)
+
+# Function to create a trade offer
+func create_trade_offer(receiver_id: String, offer_items: Array, request_items: Array):
+	var payload = {
+	"receiver_id": receiver_id,
+	"offer_items": offer_items,
+	"request_items": request_items
+	}
+	var rpc_future = await client.rpc_async(session, "create_trade_offer", JSON.stringify(payload))
+	
+
+	
+	var response = JSON.parse_string(rpc_future.payload)
+	print("Trade offer created with ID: %s" % response.offer_id)
+
+# Function to accept a trade offer
+func accept_trade_offer(offer_id: String):
+	var payload = {"offer_id": offer_id}
+	var rpc_future = await client.rpc_async(session, "accept_trade_offer", JSON.stringify(payload))
+
+
+	
+	var response = JSON.parse_string(rpc_future.payload)
+	print("Trade accepted: %s" % response)
+
+# Function to cancel a trade offer
+func cancel_trade_offer(offer_id: String):
+	var payload = {"offer_id": offer_id}
+	var rpc_future = await client.rpc_async(session, "cancel_trade_offer", JSON.stringify(payload))
+
+
+	if rpc_future.is_error():
+		print("Failed to cancel trade offer: %s" % rpc_future.error)
+	else:
+		var response = JSON.stringify(rpc_future.get_result().payload)
+		print("Trade offer canceled: %s" % response.result)
+
+# Function to get the player's inventory
+func get_inventory(id):
+	var rpc_future = await client.rpc_async(session, "get_inventory", JSON.stringify({"id": id}))
+
+	var inventory  = JSON.parse_string(rpc_future.payload)
+	print("Inventory: %s" % inventory)
+		# You can process the inventory data as needed
+		
+	return inventory
+
+# Function to get pending trade offers
+func get_trade_offers():
+	var rpc_future = await client.rpc_async(session, "get_trade_offers", "")
+
+	
+	var trade_offers = JSON.parse_string(rpc_future.payload)
+	print("Pending trade offers: %s" % trade_offers)
+		# You can process the trade offers data as needed
+	return trade_offers
+func get_items(playerId, id):
+	var data = {"id" : playerId, "item_id" : id}
+	var rpc_future = await client.rpc_async(session, "get_item", JSON.stringify(data))
+	
+	return JSON.parse_string(rpc_future.payload)
+# Example usage
+func some_function():
+	# Adding an item
+	
+
+	# Creating a trade offer
+	var receiver = "2e046658-5d93-4c47-a9ef-7eea3eaa520a"  # Replace with actual receiver user ID
+	var offer_items = ["4a082709-ca11-4613-8b83-3169d7964469"]
+	var request_items = []
+	create_trade_offer(receiver, offer_items, request_items)
+
+	# Accepting a trade offer
+	var offer_id = "trade_offer_id"  # Replace with actual trade offer ID
+	accept_trade_offer(offer_id)
+
+	# Canceling a trade offer
+	cancel_trade_offer(offer_id)
+
+	# Getting inventory
+	get_inventory(session.user_id)
+
+	# Getting trade offers
+	get_trade_offers()
+
+
+func _on_add_inventory_button_down():
+	var item = {"name": "Sword", "type": "Weapon", "rarity": "Rare"}
+	add_item_to_inventory(item)
+	pass # Replace with function body.
+
+
+func _on_get_inventory_button_down():
+	get_inventory(session.user_id)
+	pass # Replace with function body.
+
+
+func _on_offer_trade_button_down():
+	# Creating a trade offer
+	var receiver = PlayerToTradeWith  # Replace with actual receiver user ID
+	var offer_items = TradeItems
+	var request_items = ItemsToTradeFor
+	create_trade_offer(receiver, offer_items, request_items)
+	pass # Replace with function body.
+
+
+func _on_get_trades_button_down():
+	var trade_offers = await get_trade_offers()
+	#var data = JSON.parse_string(trade_offers)
+	for i in trade_offers:
+		var button = Button.new()
+		var id = await client.get_users_async(session, [i.sender_id], null)
+		button.text = id.users[0].display_name
+		button.button_down.connect(setTradeOffers.bind(i))
+		$Trading/Inventory/VBoxContainer.add_child(button)
+	pass # Replace with function body.
+
+func setTradeOffers(offer):
+	for i in offer.request_items:
+		#var item = await get_items(offer.receiver_id, i.item_id)
+		var button = Button.new()
+		button.text = i.name
+		$"Trading/Panel/Player 2/VBoxContainer".add_child(button)
+	for i in offer.offer_items:
+		#var item = await get_items(offer.sender_id, i.item_id)
+		var button = Button.new()
+		button.text = i.name
+		$"Trading/Panel/Player 1/VBoxContainer".add_child(button)
+	currentTradeOffer = offer
+
+func _on_accept_trade_button_down():
+	
+	# Accepting a trade offer
+	var offer_id = currentTradeOffer.offer_id  # Replace with actual trade offer ID
+	accept_trade_offer(offer_id)
+	pass # Replace with function body.
+
+var TradeItems = []
+var ItemsToTradeFor = []
+var PlayerToTradeWith
+var currentTradeOffer
+func trade(id):
+	PlayerToTradeWith = id
+	print("player to trade with" + PlayerToTradeWith)
+	var inventory = await get_inventory(id)
+	for i in inventory:
+		var button = Button.new()
+		button.text = i.name
+		button.button_down.connect(setItemForTrade.bind(i, button, false))
+		$"Trading/Panel/Player 2/VBoxContainer".add_child(button)
+	
+	var myInventory = await get_inventory(session.user_id)
+	
+	for s in myInventory:
+		var button = Button.new()
+		button.text = s.name
+		button.button_down.connect(setItemForTrade.bind(s, button, true))
+		$"Trading/Panel/Player 1/VBoxContainer".add_child(button)
+		
+func setItemForTrade(item, button : Button, player):
+	var items
+	if player:
+		items = TradeItems
+	else:
+		items = ItemsToTradeFor
+	if(!items.has(item)):
+		items.append(item)
+		var stylebox = StyleBoxFlat.new()
+		stylebox.bg_color = Color.GREEN
+		button.add_theme_stylebox_override("normal", stylebox)
+	else:
+		items.erase(item)
+		var stylebox = StyleBoxFlat.new()
+		stylebox.bg_color = Color.WHITE
+		button.add_theme_stylebox_override("normal", stylebox)
+	if player:
+		TradeItems = items
+	else:
+		ItemsToTradeFor = items 
+		
