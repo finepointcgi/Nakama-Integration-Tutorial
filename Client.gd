@@ -19,7 +19,7 @@ signal OnStartGame()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("defaultkey", "198.199.80.118", 7350, "http")
+	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
 	
 	pass # Replace with function body.
 
@@ -219,8 +219,10 @@ func _on_get_friends_button_down():
 		print(i)
 		var currentButton = Button.new()
 		container.add_child(currentButton)
-		currentButton.text = "Invite"
-		currentButton.button_down.connect(onInviteToParty.bind(i))
+		currentButton.text = "Trade"
+		#currentButton.text = "Invite"
+		currentButton.button_down.connect(onTrade.bind(i))
+		#currentButton.button_down.connect(onInviteToParty.bind(i))
 		$Panel4/Panel4/VBoxContainer.add_child(container)
 		
 	pass # Replace with function body.
@@ -476,3 +478,157 @@ func _on_join_party_no_button_down():
 
 func onPartyPresence(presence : NakamaRTAPI.PartyPresenceEvent):
 	print("JOINED PARTY " + presence.party_id)
+
+############### RPC TRADE SYSTEM
+func _on_ping_rpc_button_down():
+	var item = {
+		"name" = "sword",
+		"type" = "Weapon",
+		"rarity" = "common"
+	}
+	var rpcReturn = await  client.rpc_async(session, "addItemToInventory", JSON.stringify(item))
+	print(rpcReturn)
+	pass # Replace with function body.
+
+
+func _on_get_inventory_button_down():
+	var inventory = await getInventory(session.user_id)
+	removeMyChildren($TradeSystem/Panel/VBoxContainer)
+	
+	for i in inventory:
+		var button = Button.new()
+		button.name = i.name
+		button.text = i.name
+		$TradeSystem/Panel/VBoxContainer.add_child(button)
+		button.button_down.connect(setItemForTrade.bind(i, button, true))
+		var stylebox = StyleBoxFlat.new()
+		button.add_theme_stylebox_override("normal", stylebox)
+		
+	pass # Replace with function body.
+
+func getInventory(id):
+	var result = await client.rpc_async(session, "getInventory", JSON.stringify({"id" : id}))
+	var inventory = JSON.parse_string(result.payload)
+	return inventory
+	pass
+
+
+func onTrade(friend):
+	var inventory = await getInventory(friend.user.id)
+	PlayerToTradeWith = friend
+	removeMyChildren($TradeSystem/Panel/VBoxContainer2)
+	
+	for i in inventory:
+		var button = Button.new()
+		button.name = i.name
+		button.text = i.name
+		button.button_down.connect(setItemForTrade.bind(i, button, false))
+		$TradeSystem/Panel/VBoxContainer2.add_child(button)
+		var stylebox = StyleBoxFlat.new()
+		button.add_theme_stylebox_override("normal", stylebox)
+	pass
+
+var TradeItems = []
+var ItemsToTradeFor = []
+var PlayerToTradeWith 
+var currentTradeOffer
+
+func setItemForTrade(item, button : Button, player: bool):
+	var items
+	if player:
+		items = TradeItems
+	else:
+		items = ItemsToTradeFor
+		
+	if(!items.has(item)):
+		items.append(item)
+		var stylebox = StyleBoxFlat.new()
+		stylebox.bg_color = Color.GREEN
+		button.add_theme_stylebox_override("normal", stylebox)
+	else:
+		items.erase(item)
+		var stylebox = StyleBoxFlat.new()
+		button.add_theme_stylebox_override("normal", stylebox)
+	
+	if player:
+		TradeItems = items
+	else:
+		ItemsToTradeFor = items
+
+
+func _on_send_trade_offer_button_down():
+	var receiverID = PlayerToTradeWith.user.id
+	var offerItems = TradeItems
+	var requestedItems = ItemsToTradeFor
+	
+	var payload = {
+		"recieverid" : receiverID,
+		"offerItems" : offerItems, 
+		"requestedItems" : requestedItems
+	}
+	if offerItems == [] || requestedItems == []:
+		print("cannot send empty offer")
+		return
+
+	var result = await  client.rpc_async(session, "createTradeOffer", JSON.stringify(payload))
+	print(result)
+	pass # Replace with function body.
+
+
+func _on_accept_trade_offer_button_down():
+	var payload = {"offerID" : currentTradeOffer.offerid}
+	var result = await  client.rpc_async(session, "acceptTradeOffer", JSON.stringify(payload))
+	
+	var response = JSON.parse_string(result.payload)
+	if result.exception != null:
+		print(result.exception.message)
+	else:
+		print("accepted trade offer " + response.result)
+	pass # Replace with function body.
+
+
+func _on_get_trade_offers_button_down():
+	var tradeOffers = await getTradeOffers()
+	
+	for i in tradeOffers:
+		var button = Button.new()
+		var id = await client.get_users_async(session, [i.senderid], null)
+		button.text = id.users[0].display_name
+		button.button_down.connect(setTradeOffers.bind(i))
+		$TradeSystem/TradeOffers/VBoxContainer.add_child(button)
+	pass # Replace with function body.
+
+func setTradeOffers(offer):
+	removeMyChildren($TradeSystem/Panel/VBoxContainer)
+	removeMyChildren($TradeSystem/Panel/VBoxContainer2)
+	
+	for i in offer.requestedItems:
+		var button = Button.new()
+		button.text = i.name
+		$TradeSystem/Panel/VBoxContainer.add_child(button)
+	for i in offer.offerItems:
+		var button = Button.new()
+		button.text = i.name
+		$TradeSystem/Panel/VBoxContainer2.add_child(button)
+	
+	currentTradeOffer = offer
+
+func removeMyChildren(node):
+	for i in node.get_children():
+		i.queue_free()
+
+func getTradeOffers():
+	var result = await client.rpc_async(session, "getTradeOffers", "{}")
+	
+	var tradeOffers = JSON.parse_string(result.payload)
+	
+	return tradeOffers
+
+
+func _on_cancel_trade_offer_button_down():
+	var payload = {"offerID" : currentTradeOffer.offerid}
+	var result = await  client.rpc_async(session, "cancelTradeOffer", JSON.stringify(payload))
+	
+	var response = JSON.parse_string(result.payload)
+	print("Canceled trade offer " + response.result)
+	pass # Replace with function body.

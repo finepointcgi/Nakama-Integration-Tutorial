@@ -12,6 +12,7 @@ grow_vertical = 2
 script = ExtResource("1_mtcsr")
 
 [node name="Panel" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 802.0
 offset_top = 102.0
@@ -52,10 +53,10 @@ text = "user account"
 
 [node name="Panel2" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 296.0
-offset_top = 57.0
-offset_right = 683.0
-offset_bottom = 226.0
+offset_left = 13.0
+offset_top = 13.0
+offset_right = 400.0
+offset_bottom = 182.0
 
 [node name="Label" type="Label" parent="Panel2"]
 layout_mode = 0
@@ -130,6 +131,7 @@ offset_bottom = 121.0
 text = "List Data from Store"
 
 [node name="Panel3" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 15.0
 offset_top = 46.0
@@ -186,10 +188,10 @@ text = "Start Game"
 
 [node name="Panel4" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 556.0
-offset_top = 272.0
-offset_right = 780.0
-offset_bottom = 436.0
+offset_left = 670.0
+offset_top = -2.0
+offset_right = 894.0
+offset_bottom = 162.0
 
 [node name="BlockFriends" type="Button" parent="Panel4"]
 layout_mode = 0
@@ -488,6 +490,7 @@ offset_bottom = 194.0
 text = "Leave Group"
 
 [node name="Panel7" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 20.0
 offset_top = 355.0
@@ -495,6 +498,7 @@ offset_right = 229.0
 offset_bottom = 613.0
 
 [node name="JoinGroupChatRoom" type="Button" parent="Panel7"]
+layout_mode = 0
 offset_left = 59.0
 offset_top = 109.0
 offset_right = 189.0
@@ -565,6 +569,7 @@ editable = false
 wrap_mode = 1
 
 [node name="JoinDirectChat" type="Button" parent="Panel7"]
+layout_mode = 0
 offset_left = 57.0
 offset_top = 161.0
 offset_right = 187.0
@@ -630,11 +635,127 @@ offset_bottom = 103.0
 text = "No"
 
 [node name="JoinPartyYes" type="Button" parent="Panel8/Panel2"]
+layout_mode = 0
 offset_left = 111.0
 offset_top = 73.0
 offset_right = 170.0
 offset_bottom = 104.0
 text = "Yes"
+
+[node name="TradeSystem" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 202.0
+offset_right = 810.0
+offset_bottom = 632.0
+
+[node name="AddItemToInventory" type="Button" parent="TradeSystem"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 27.0
+offset_right = 176.0
+offset_bottom = 85.0
+text = "Ping RPC"
+
+[node name="GetInventory" type="Button" parent="TradeSystem"]
+offset_left = 29.0
+offset_top = 99.0
+offset_right = 176.0
+offset_bottom = 157.0
+text = "Get Inventory"
+
+[node name="SendTradeOffer" type="Button" parent="TradeSystem"]
+offset_left = 29.0
+offset_top = 163.0
+offset_right = 176.0
+offset_bottom = 221.0
+text = "Send Trade Offer"
+
+[node name="GetTradeOffers" type="Button" parent="TradeSystem"]
+offset_left = 29.0
+offset_top = 228.0
+offset_right = 176.0
+offset_bottom = 286.0
+text = "Get Trade Offers"
+
+[node name="AcceptTradeOffer2" type="Button" parent="TradeSystem"]
+offset_left = 30.0
+offset_top = 352.0
+offset_right = 183.0
+offset_bottom = 410.0
+text = "Accept Trade Offer"
+
+[node name="CancelTradeOffer" type="Button" parent="TradeSystem"]
+offset_left = 29.0
+offset_top = 291.0
+offset_right = 176.0
+offset_bottom = 349.0
+text = "Cancel Trade Offer"
+
+[node name="Panel" type="Panel" parent="TradeSystem"]
+layout_mode = 0
+offset_left = 482.0
+offset_top = 20.0
+offset_right = 774.0
+offset_bottom = 356.0
+
+[node name="Panel" type="Panel" parent="TradeSystem/Panel"]
+layout_mode = 0
+offset_right = 292.0
+offset_bottom = 155.0
+
+[node name="Panel2" type="Panel" parent="TradeSystem/Panel"]
+layout_mode = 0
+offset_top = 178.0
+offset_right = 292.0
+offset_bottom = 333.0
+
+[node name="FriendNameLabel" type="Label" parent="TradeSystem/Panel"]
+layout_mode = 0
+offset_top = 155.0
+offset_right = 94.0
+offset_bottom = 178.0
+text = "Other User: "
+
+[node name="Label2" type="Label" parent="TradeSystem/Panel"]
+offset_left = 4.0
+offset_top = -22.0
+offset_right = 98.0
+offset_bottom = 1.0
+text = "My Inventory"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TradeSystem/Panel"]
+layout_mode = 0
+offset_right = 293.0
+offset_bottom = 153.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="TradeSystem/Panel"]
+layout_mode = 0
+offset_top = 183.0
+offset_right = 293.0
+offset_bottom = 336.0
+
+[node name="TradeOffers" type="Panel" parent="TradeSystem"]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 21.0
+offset_right = 473.0
+offset_bottom = 349.0
+
+[node name="Label" type="Label" parent="TradeSystem/TradeOffers"]
+layout_mode = 0
+offset_top = -21.0
+offset_right = 40.0
+offset_bottom = 2.0
+text = "Trade Offers"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TradeSystem/TradeOffers"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="button_down" from="Panel2/LoginButton" to="." method="_on_login_button_button_down"]
 [connection signal="button_down" from="Data Pannel/StoreData" to="." method="_on_store_data_button_down"]
@@ -668,3 +789,9 @@ text = "Yes"
 [connection signal="button_down" from="Panel8/CreateParty" to="." method="_on_create_party_button_down"]
 [connection signal="button_down" from="Panel8/Panel2/JoinPartyNo" to="." method="_on_join_party_no_button_down"]
 [connection signal="button_down" from="Panel8/Panel2/JoinPartyYes" to="." method="_on_join_party_yes_button_down"]
+[connection signal="button_down" from="TradeSystem/AddItemToInventory" to="." method="_on_ping_rpc_button_down"]
+[connection signal="button_down" from="TradeSystem/GetInventory" to="." method="_on_get_inventory_button_down"]
+[connection signal="button_down" from="TradeSystem/SendTradeOffer" to="." method="_on_send_trade_offer_button_down"]
+[connection signal="button_down" from="TradeSystem/GetTradeOffers" to="." method="_on_get_trade_offers_button_down"]
+[connection signal="button_down" from="TradeSystem/AcceptTradeOffer2" to="." method="_on_accept_trade_offer_button_down"]
+[connection signal="button_down" from="TradeSystem/CancelTradeOffer" to="." method="_on_cancel_trade_offer_button_down"]
