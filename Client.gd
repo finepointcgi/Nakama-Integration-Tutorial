@@ -17,6 +17,8 @@ var party
 
 signal OnStartGame()
 
+var id
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
@@ -27,11 +29,42 @@ func updateUserInfo(username, displayname, avaterurl = "", language = "en", loca
 	await client.update_account_async(session, username, displayname, avaterurl, language, location, timezone)
 
 func onMatchPresence(presence : NakamaRTAPI.MatchPresenceEvent):
-	print(presence)
+	print("user: " + session.username + " recieved presence : " + str(presence))
+	createdMatch = presence
+	for i in presence.joins:
+		$Node.connected(i.user_id)
 
 func onMatchState(state : NakamaRTAPI.MatchData):
-	print("data is : " + str(state.data))
-
+	#print("data is : " + str(state.data))
+	#var dataString = packet.get_string_from_utf8()
+	var data = JSON.parse_string(state.data)
+	
+	print(data)
+	if data.has("message"):
+		if data.message == Utilities.Message.id:
+			id = data.id
+			
+			$Node.connected(id)
+			
+		if data.message == Utilities.Message.userConnected:
+			#GameManager.Players[data.id] = data.player
+			$Node.createPeer(data.id)
+			
+		if data.message == Utilities.Message.candidate:
+			if $Node.rtcPeer.has_peer(data.orgPeer):
+				print("Got Candididate: " + str(data.orgPeer) + " my id is " + str(id))
+				$Node.rtcPeer.get_peer(data.orgPeer).connection.add_ice_candidate(data.mid, data.index, data.sdp)
+		
+		if data.message == Utilities.Message.offer:
+			if $Node.rtcPeer.has_peer(data.orgPeer):
+				$Node.rtcPeer.get_peer(data.orgPeer).connection.set_remote_description("offer", data.data)
+		
+		if data.message == Utilities.Message.answer:
+			if $Node.rtcPeer.has_peer(data.orgPeer):
+				$Node.rtcPeer.get_peer(data.orgPeer).connection.set_remote_description("answer", data.data)
+		if data.message == Utilities.Message.ping:
+			print("got ping")
+		#if data.message data== Message.serverLobbyInfo:
 func onSocketConnected():
 	print("Socket Connected")
 
@@ -172,7 +205,7 @@ func _on_join_create_match_button_down():
 func _on_ping_button_down():
 	#sendData.rpc("hello world")
 	var data = {"hello" : "world"}
-	socket.send_match_state_async(createdMatch.match_id, 1, JSON.stringify(data))
+	socket.send_match_state_async(createdMatch, 1, JSON.stringify(data))
 	pass # Replace with function body.
 
 @rpc("any_peer")

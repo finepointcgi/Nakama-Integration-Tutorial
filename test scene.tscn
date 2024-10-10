@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://p2ptqa1u1n1k"]
+[gd_scene load_steps=3 format=3 uid="uid://p2ptqa1u1n1k"]
 
 [ext_resource type="Script" path="res://Client.gd" id="1_mtcsr"]
+[ext_resource type="Script" path="res://web_rtc.gd" id="2_a8sp8"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,7 +13,6 @@ grow_vertical = 2
 script = ExtResource("1_mtcsr")
 
 [node name="Panel" type="Panel" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 802.0
 offset_top = 102.0
@@ -131,12 +131,11 @@ offset_bottom = 121.0
 text = "List Data from Store"
 
 [node name="Panel3" type="Panel" parent="."]
-visible = false
 layout_mode = 0
-offset_left = 15.0
-offset_top = 46.0
-offset_right = 268.0
-offset_bottom = 269.0
+offset_left = 18.0
+offset_top = 198.0
+offset_right = 271.0
+offset_bottom = 421.0
 
 [node name="JoinCreateMatch" type="Button" parent="Panel3"]
 layout_mode = 0
@@ -187,6 +186,7 @@ offset_bottom = 215.0
 text = "Start Game"
 
 [node name="Panel4" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 670.0
 offset_top = -2.0
@@ -562,11 +562,13 @@ offset_top = -31.0
 offset_bottom = -33.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 0
 
 [node name="username" type="TextEdit" parent="Panel7/Chat/TabContainer"]
 layout_mode = 2
 editable = false
 wrap_mode = 1
+metadata/_tab_index = 0
 
 [node name="JoinDirectChat" type="Button" parent="Panel7"]
 layout_mode = 0
@@ -643,6 +645,7 @@ offset_bottom = 104.0
 text = "Yes"
 
 [node name="TradeSystem" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 22.0
 offset_top = 202.0
@@ -658,6 +661,7 @@ offset_bottom = 85.0
 text = "Ping RPC"
 
 [node name="GetInventory" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 99.0
 offset_right = 176.0
@@ -665,6 +669,7 @@ offset_bottom = 157.0
 text = "Get Inventory"
 
 [node name="SendTradeOffer" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 163.0
 offset_right = 176.0
@@ -672,6 +677,7 @@ offset_bottom = 221.0
 text = "Send Trade Offer"
 
 [node name="GetTradeOffers" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 228.0
 offset_right = 176.0
@@ -679,6 +685,7 @@ offset_bottom = 286.0
 text = "Get Trade Offers"
 
 [node name="AcceptTradeOffer2" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 352.0
 offset_right = 183.0
@@ -686,6 +693,7 @@ offset_bottom = 410.0
 text = "Accept Trade Offer"
 
 [node name="CancelTradeOffer" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 291.0
 offset_right = 176.0
@@ -718,6 +726,7 @@ offset_bottom = 178.0
 text = "Other User: "
 
 [node name="Label2" type="Label" parent="TradeSystem/Panel"]
+layout_mode = 0
 offset_left = 4.0
 offset_top = -22.0
 offset_right = 98.0
@@ -756,6 +765,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("2_a8sp8")
 
 [connection signal="button_down" from="Panel2/LoginButton" to="." method="_on_login_button_button_down"]
 [connection signal="button_down" from="Data Pannel/StoreData" to="." method="_on_store_data_button_down"]

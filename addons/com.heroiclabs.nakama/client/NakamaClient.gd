@@ -1081,4 +1081,3 @@ func write_tournament_record2_async(p_session : NakamaSession,
 			"score": str(p_score),
 			"subscore": str(p_subscore)
 		}))
-
