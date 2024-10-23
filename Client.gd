@@ -19,7 +19,7 @@ signal OnStartGame()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
+	client = Nakama.create_client("AGgpLqM45wdkEIH4PMvs5c90T6HxtrBV", "127.0.0.1", 7350, "https")
 	
 	pass # Replace with function body.
 
@@ -47,7 +47,7 @@ func _process(delta):
 
 
 func _on_login_button_button_down():
-	session = await client.authenticate_email_async($Panel2/EmailInput.text , $Panel2/PasswordInput.text)
+	session = await client.authenticate_email_async($Panel2/EmailInput.text , $Panel2/PasswordInput.text,)
 	
 	#var deviceid = OS.get_unique_id()
 	#session = await client.authenticate_device_async(deviceid)

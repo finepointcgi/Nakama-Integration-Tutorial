@@ -562,11 +562,13 @@ offset_top = -31.0
 offset_bottom = -33.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 0
 
 [node name="username" type="TextEdit" parent="Panel7/Chat/TabContainer"]
 layout_mode = 2
 editable = false
 wrap_mode = 1
+metadata/_tab_index = 0
 
 [node name="JoinDirectChat" type="Button" parent="Panel7"]
 layout_mode = 0
@@ -658,6 +660,7 @@ offset_bottom = 85.0
 text = "Ping RPC"
 
 [node name="GetInventory" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 99.0
 offset_right = 176.0
@@ -665,6 +668,7 @@ offset_bottom = 157.0
 text = "Get Inventory"
 
 [node name="SendTradeOffer" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 163.0
 offset_right = 176.0
@@ -672,6 +676,7 @@ offset_bottom = 221.0
 text = "Send Trade Offer"
 
 [node name="GetTradeOffers" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 228.0
 offset_right = 176.0
@@ -679,6 +684,7 @@ offset_bottom = 286.0
 text = "Get Trade Offers"
 
 [node name="AcceptTradeOffer2" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 352.0
 offset_right = 183.0
@@ -686,6 +692,7 @@ offset_bottom = 410.0
 text = "Accept Trade Offer"
 
 [node name="CancelTradeOffer" type="Button" parent="TradeSystem"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 291.0
 offset_right = 176.0
@@ -718,6 +725,7 @@ offset_bottom = 178.0
 text = "Other User: "
 
 [node name="Label2" type="Label" parent="TradeSystem/Panel"]
+layout_mode = 0
 offset_left = 4.0
 offset_top = -22.0
 offset_right = 98.0
