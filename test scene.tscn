@@ -1,304 +1,219 @@
-[gd_scene load_steps=2 format=3 uid="uid://p2ptqa1u1n1k"]
+[gd_scene load_steps=11 format=3 uid="uid://p2ptqa1u1n1k"]
 
 [ext_resource type="Script" path="res://Client.gd" id="1_mtcsr"]
+[ext_resource type="PackedScene" uid="uid://c25altqf87k2j" path="res://Lobby/FriendHBoxContainer/FriendHBoxContainer.tscn" id="2_cekro"]
+[ext_resource type="PackedScene" uid="uid://bg6xgsfypi4gr" path="res://NotificationContainer/NotificationContainer.tscn" id="2_lanui"]
+[ext_resource type="PackedScene" uid="uid://cvedwg86rsyp2" path="res://Lobby/UserInformationDisplay/UserInformationDisplay.tscn" id="2_qmkq0"]
+[ext_resource type="PackedScene" uid="uid://dd2ekb3yor3hh" path="res://Authentication/LoginPanel/LoginPanel.tscn" id="4_4xlfs"]
+[ext_resource type="PackedScene" uid="uid://xq36w5vrpfwb" path="res://Authentication/RegisterPanel/RegisterPanel.tscn" id="5_wys0s"]
 
-[node name="Control" type="Control"]
-layout_mode = 3
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qptp"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.140447, 0.140447, 0.140447, 1)
+
+[sub_resource type="Theme" id="Theme_k1pkr"]
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_6qptp")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmgb8"]
+content_margin_left = 7.0
+content_margin_top = 7.0
+content_margin_right = 7.0
+content_margin_bottom = 7.0
+bg_color = Color(0.315076, 0.398015, 0.42524, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u303v"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.139728, 0.149761, 0.185489, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="Game" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_k1pkr")
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 script = ExtResource("1_mtcsr")
+friends_packed_scene = ExtResource("2_cekro")
 
-[node name="Panel" type="Panel" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 802.0
-offset_top = 102.0
-offset_right = 1079.0
-offset_bottom = 197.0
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="UserAccountLabel" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 39.0
-offset_right = 146.0
-offset_bottom = 62.0
-text = "User Account"
+[node name="LobbyContainer" type="TabContainer" parent="HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 0
 
-[node name="UserAccountText" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 159.0
-offset_top = 39.0
-offset_right = 264.0
-offset_bottom = 62.0
-text = "user account"
+[node name="Friend List" type="PanelContainer" parent="HBox/LobbyContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+metadata/_tab_index = 0
 
-[node name="DisplayName" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 41.0
-offset_top = 63.0
-offset_right = 148.0
-offset_bottom = 86.0
-text = "Display Name"
+[node name="HBoxContainer" type="HSplitContainer" parent="HBox/LobbyContainer/Friend List"]
+layout_mode = 2
 
-[node name="DisplayNameText" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 159.0
-offset_top = 63.0
-offset_right = 264.0
-offset_bottom = 86.0
-text = "user account"
+[node name="VBox" type="VBoxContainer" parent="HBox/LobbyContainer/Friend List/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="Panel2" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 13.0
-offset_top = 13.0
-offset_right = 400.0
-offset_bottom = 182.0
-
-[node name="Label" type="Label" parent="Panel2"]
-layout_mode = 0
-offset_left = 34.0
-offset_top = 20.0
-offset_right = 108.0
-offset_bottom = 43.0
-text = "Email"
-
-[node name="Label2" type="Label" parent="Panel2"]
-layout_mode = 0
-offset_left = 34.0
-offset_top = 69.0
-offset_right = 108.0
-offset_bottom = 92.0
-text = "Password"
-
-[node name="EmailInput" type="LineEdit" parent="Panel2"]
-layout_mode = 0
-offset_left = 122.0
-offset_top = 23.0
-offset_right = 347.0
-offset_bottom = 54.0
-text = "test@gmail.com"
-
-[node name="PasswordInput" type="LineEdit" parent="Panel2"]
-layout_mode = 0
-offset_left = 120.0
-offset_top = 63.0
-offset_right = 347.0
-offset_bottom = 94.0
-text = "password"
-
-[node name="LoginButton" type="Button" parent="Panel2"]
-layout_mode = 0
-offset_left = 222.0
-offset_top = 114.0
-offset_right = 352.0
-offset_bottom = 157.0
-text = "Submit"
-
-[node name="Data Pannel" type="Panel" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 9.0
-offset_top = 508.0
-offset_right = 241.0
-offset_bottom = 637.0
-
-[node name="StoreData" type="Button" parent="Data Pannel"]
-layout_mode = 0
-offset_left = 36.0
-offset_top = 11.0
-offset_right = 199.0
-offset_bottom = 42.0
-text = "Store Data"
-
-[node name="GetData" type="Button" parent="Data Pannel"]
-layout_mode = 0
-offset_left = 36.0
-offset_top = 49.0
-offset_right = 137.0
-offset_bottom = 71.0
-text = "Get Data from Store"
-
-[node name="ListData" type="Button" parent="Data Pannel"]
-layout_mode = 0
-offset_left = 36.0
-offset_top = 90.0
-offset_right = 200.0
-offset_bottom = 121.0
-text = "List Data from Store"
-
-[node name="Panel3" type="Panel" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 15.0
-offset_top = 46.0
-offset_right = 268.0
-offset_bottom = 269.0
-
-[node name="JoinCreateMatch" type="Button" parent="Panel3"]
-layout_mode = 0
-offset_left = 120.0
-offset_top = 69.0
-offset_right = 230.0
-offset_bottom = 104.0
-text = "Join/Create"
-
-[node name="MatchName" type="LineEdit" parent="Panel3"]
-layout_mode = 0
-offset_left = 99.0
-offset_top = 22.0
-offset_right = 243.0
-offset_bottom = 53.0
-
-[node name="Label" type="Label" parent="Panel3"]
-layout_mode = 0
-offset_left = 9.0
-offset_top = 11.0
-offset_right = 91.0
-offset_bottom = 60.0
-text = "Name Of 
-Match"
-
-[node name="Ping" type="Button" parent="Panel3"]
-layout_mode = 0
-offset_left = 9.0
-offset_top = 75.0
-offset_right = 102.0
-offset_bottom = 106.0
-text = "Ping"
-
-[node name="Matchmaking" type="Button" parent="Panel3"]
-layout_mode = 0
-offset_left = 51.0
-offset_top = 131.0
-offset_right = 207.0
-offset_bottom = 166.0
-text = "Start Matchmaking"
-
-[node name="Button" type="Button" parent="Panel3"]
-layout_mode = 0
-offset_left = 53.0
-offset_top = 175.0
-offset_right = 201.0
-offset_bottom = 215.0
-text = "Start Game"
-
-[node name="Panel4" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 670.0
-offset_top = -2.0
-offset_right = 894.0
-offset_bottom = 162.0
-
-[node name="BlockFriends" type="Button" parent="Panel4"]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 126.0
-offset_right = 102.0
-offset_bottom = 157.0
+[node name="BlockFriends" type="Button" parent="HBox/LobbyContainer/Friend List/HBoxContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 0
 text = "Block Friend"
 
-[node name="GetFriends" type="Button" parent="Panel4"]
-layout_mode = 0
-offset_left = 3.0
-offset_top = 84.0
-offset_right = 104.0
-offset_bottom = 115.0
-text = "Get Friends"
+[node name="GridContainer" type="HBoxContainer" parent="HBox/LobbyContainer/Friend List/HBoxContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 0
 
-[node name="AddFriendText" type="LineEdit" parent="Panel4"]
-layout_mode = 0
-offset_left = 20.0
-offset_top = 32.0
-offset_right = 201.0
-offset_bottom = 63.0
+[node name="AddFriendText" type="LineEdit" parent="HBox/LobbyContainer/Friend List/HBoxContainer/VBox/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Name of friend"
 
-[node name="AddFriend" type="Button" parent="Panel4"]
-layout_mode = 0
-offset_left = 106.0
-offset_top = 84.0
-offset_right = 207.0
-offset_bottom = 115.0
+[node name="AddFriend" type="Button" parent="HBox/LobbyContainer/Friend List/HBoxContainer/VBox/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 text = "Add friend"
 
-[node name="RemoveFriend" type="Button" parent="Panel4/AddFriend"]
-layout_mode = 0
-offset_left = -4.0
-offset_top = 41.0
-offset_right = 105.0
-offset_bottom = 72.0
+[node name="RemoveFriend" type="Button" parent="HBox/LobbyContainer/Friend List/HBoxContainer/VBox"]
+layout_mode = 2
 text = "Delete friend"
 
-[node name="Panel4" type="Panel" parent="Panel4"]
-layout_mode = 0
-offset_left = 246.0
-offset_top = 9.0
-offset_right = 470.0
-offset_bottom = 253.0
+[node name="GetFriends" type="Button" parent="HBox/LobbyContainer/Friend List/HBoxContainer/VBox"]
+layout_mode = 2
+text = "Get Friends"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel4/Panel4"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 26.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="FriendsBox" type="PanelContainer" parent="HBox/LobbyContainer/Friend List/HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_tmgb8")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Panel4/Panel4"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 30.0
-grow_horizontal = 2
+[node name="VBox" type="VBoxContainer" parent="HBox/LobbyContainer/Friend List/HBoxContainer/FriendsBox"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBox/LobbyContainer/Friend List/HBoxContainer/FriendsBox/VBox"]
+layout_mode = 2
 bbcode_enabled = true
 text = "[center][b]Friends"
+fit_content = true
 
-[node name="Panel5" type="Panel" parent="."]
+[node name="Panel" type="PanelContainer" parent="HBox/LobbyContainer/Friend List/HBoxContainer/FriendsBox/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_u303v")
+
+[node name="FriendsContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Friend List/HBoxContainer/FriendsBox/VBox/Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Match Finder" type="PanelContainer" parent="HBox/LobbyContainer"]
 visible = false
-layout_mode = 0
-offset_left = 10.0
-offset_top = 274.0
-offset_right = 234.0
-offset_bottom = 438.0
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/_tab_index = 1
 
-[node name="CloseGroup" type="Button" parent="Panel5"]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 126.0
-offset_right = 102.0
-offset_bottom = 157.0
-text = "Close Group"
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Match Finder"]
+layout_mode = 2
 
-[node name="GetGroupMemebers" type="Button" parent="Panel5"]
-layout_mode = 0
-offset_left = 3.0
-offset_top = 84.0
-offset_right = 104.0
-offset_bottom = 115.0
-text = "Get Group"
+[node name="Label" type="Label" parent="HBox/LobbyContainer/Match Finder/VBoxContainer"]
+layout_mode = 2
+text = "Name Of Match"
 
-[node name="GroupName" type="LineEdit" parent="Panel5"]
-layout_mode = 0
-offset_left = 20.0
-offset_top = 32.0
-offset_right = 201.0
-offset_bottom = 63.0
+[node name="MatchName" type="LineEdit" parent="HBox/LobbyContainer/Match Finder/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="HBox/LobbyContainer/Match Finder/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="JoinCreateMatch" type="Button" parent="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Join/Create"
+
+[node name="Ping" type="Button" parent="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ping"
+
+[node name="Matchmaking" type="Button" parent="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Start Matchmaking"
+
+[node name="Button" type="Button" parent="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="Data Panel" type="PanelContainer" parent="HBox/LobbyContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/_tab_index = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Data Panel"]
+layout_mode = 2
+
+[node name="StoreData" type="Button" parent="HBox/LobbyContainer/Data Panel/VBoxContainer"]
+layout_mode = 2
+text = "Store Data"
+
+[node name="GetData" type="Button" parent="HBox/LobbyContainer/Data Panel/VBoxContainer"]
+layout_mode = 2
+text = "Get Data from Store"
+
+[node name="ListData" type="Button" parent="HBox/LobbyContainer/Data Panel/VBoxContainer"]
+layout_mode = 2
+text = "List Data from Store"
+
+[node name="Group Admin Panel" type="PanelContainer" parent="HBox/LobbyContainer"]
+visible = false
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Group Admin Panel"]
+layout_mode = 2
+
+[node name="GroupName2" type="LineEdit" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 placeholder_text = "Name of group"
 
-[node name="CreateGroup" type="Button" parent="Panel5"]
-layout_mode = 0
-offset_left = 106.0
-offset_top = 84.0
-offset_right = 207.0
-offset_bottom = 115.0
+[node name="CloseGroup" type="Button" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer"]
+layout_mode = 2
+text = "Close Group"
+
+[node name="GetGroupMemebers" type="Button" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer"]
+layout_mode = 2
+text = "Get Group"
+
+[node name="CreateGroup" type="Button" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer"]
+layout_mode = 2
 text = "Create Group"
 
-[node name="DeleteGroup" type="Button" parent="Panel5/CreateGroup"]
+[node name="DeleteGroup" type="Button" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer/CreateGroup"]
 layout_mode = 0
 offset_left = -4.0
 offset_top = 41.0
@@ -306,126 +221,79 @@ offset_right = 105.0
 offset_bottom = 72.0
 text = "Delete Group"
 
-[node name="Panel4" type="Panel" parent="Panel5"]
-layout_mode = 0
-offset_left = 246.0
-offset_top = 9.0
-offset_right = 470.0
-offset_bottom = 253.0
+[node name="Panel4" type="PanelContainer" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer"]
+layout_mode = 2
 
-[node name="GroupVBox" type="VBoxContainer" parent="Panel5/Panel4"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 26.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer/Panel4"]
+layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Panel5/Panel4"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 30.0
-grow_horizontal = 2
+[node name="GroupVBox" type="VBoxContainer" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer/Panel4/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBox/LobbyContainer/Group Admin Panel/VBoxContainer/Panel4/VBoxContainer"]
+layout_mode = 2
 bbcode_enabled = true
 text = "[center][b]Group Memebers"
 
-[node name="Panel6" type="Panel" parent="."]
+[node name="Group Manager" type="PanelContainer" parent="HBox/LobbyContainer"]
 visible = false
-layout_mode = 0
-offset_left = 546.0
-offset_top = 250.0
-offset_right = 945.0
-offset_bottom = 658.0
+layout_mode = 2
+metadata/_tab_index = 4
 
-[node name="Label" type="Label" parent="Panel6"]
-layout_mode = 0
-offset_left = 14.0
-offset_top = 26.0
-offset_right = 61.0
-offset_bottom = 49.0
+[node name="VBoxContainer" type="GridContainer" parent="HBox/LobbyContainer/Group Manager"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Name"
 
-[node name="Label2" type="Label" parent="Panel6"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 66.0
-offset_right = 105.0
-offset_bottom = 89.0
+[node name="GroupName" type="LineEdit" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Description"
 
-[node name="GroupName" type="LineEdit" parent="Panel6"]
-layout_mode = 0
-offset_left = 113.0
-offset_top = 26.0
-offset_right = 298.0
-offset_bottom = 57.0
+[node name="GroupDesc" type="LineEdit" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 
-[node name="GroupDesc" type="LineEdit" parent="Panel6"]
-layout_mode = 0
-offset_left = 114.0
-offset_top = 63.0
-offset_right = 298.0
-offset_bottom = 94.0
-
-[node name="GroupQuery" type="LineEdit" parent="Panel6"]
-layout_mode = 0
-offset_left = 157.0
-offset_top = 212.0
-offset_right = 298.0
-offset_bottom = 243.0
+[node name="GroupQuery" type="LineEdit" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 placeholder_text = "Group Query"
 
-[node name="CreateGroup" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 153.0
-offset_top = 107.0
-offset_right = 265.0
-offset_bottom = 138.0
+[node name="CreateGroup" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Create Group"
 
-[node name="AddUserToGroup" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 107.0
-offset_right = 140.0
-offset_bottom = 138.0
+[node name="AddUserToGroup" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Join Group"
 
-[node name="AddUserToGroup2" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 147.0
-offset_right = 142.0
-offset_bottom = 201.0
+[node name="AddUserToGroup2" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Add User 
 To Group"
 
-[node name="List Groups" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 208.0
-offset_right = 142.0
-offset_bottom = 262.0
+[node name="List Groups" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "List Groups"
 
-[node name="CheckButton" type="CheckButton" parent="Panel6"]
-layout_mode = 0
-offset_left = 173.0
-offset_top = 164.0
-offset_right = 263.0
-offset_bottom = 195.0
+[node name="CheckButton" type="CheckButton" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Open"
 
-[node name="Panel" type="Panel" parent="Panel6"]
-layout_mode = 0
-offset_left = 412.0
-offset_top = 4.0
-offset_right = 656.0
-offset_bottom = 273.0
+[node name="Panel" type="Panel" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel6/Panel"]
+[node name="Panel6Vbox" type="VBoxContainer" parent="HBox/LobbyContainer/Group Manager/VBoxContainer/Panel"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -433,373 +301,276 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="UserToManage" type="LineEdit" parent="Panel6"]
-layout_mode = 0
-offset_left = 33.0
-offset_top = 277.0
-offset_right = 276.0
-offset_bottom = 308.0
+[node name="UserToManage" type="LineEdit" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 placeholder_text = "User To Manage"
 
-[node name="PromoteUser" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 25.0
-offset_top = 319.0
-offset_right = 129.0
-offset_bottom = 355.0
+[node name="PromoteUser" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Promote"
 
-[node name="KickUser" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 144.0
-offset_top = 320.0
-offset_right = 248.0
-offset_bottom = 356.0
+[node name="KickUser" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Kick"
 
-[node name="DemoteUser" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 364.0
-offset_right = 127.0
-offset_bottom = 400.0
+[node name="DemoteUser" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Demote"
 
-[node name="BanUser" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 147.0
-offset_top = 364.0
-offset_right = 251.0
-offset_bottom = 400.0
+[node name="BanUser" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Ban"
 
-[node name="LeaveGroup" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 285.0
-offset_top = 106.0
-offset_right = 391.0
-offset_bottom = 142.0
+[node name="LeaveGroup" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Leave Group"
 
-[node name="DeleteGroup" type="Button" parent="Panel6"]
-layout_mode = 0
-offset_left = 278.0
-offset_top = 158.0
-offset_right = 384.0
-offset_bottom = 194.0
+[node name="DeleteGroup" type="Button" parent="HBox/LobbyContainer/Group Manager/VBoxContainer"]
+layout_mode = 2
 text = "Leave Group"
 
-[node name="Panel7" type="Panel" parent="."]
+[node name="Chat" type="PanelContainer" parent="HBox/LobbyContainer"]
 visible = false
-layout_mode = 0
-offset_left = 20.0
-offset_top = 355.0
-offset_right = 229.0
-offset_bottom = 613.0
+layout_mode = 2
+metadata/_tab_index = 5
 
-[node name="JoinGroupChatRoom" type="Button" parent="Panel7"]
-layout_mode = 0
-offset_left = 59.0
-offset_top = 109.0
-offset_right = 189.0
-offset_bottom = 153.0
-text = "Join Group Chat"
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Chat"]
+layout_mode = 2
 
-[node name="JoinChatRoom" type="Button" parent="Panel7"]
-layout_mode = 0
-offset_left = 63.0
-offset_top = 57.0
-offset_right = 173.0
-offset_bottom = 101.0
-text = "Join Chat"
-
-[node name="ChatName" type="LineEdit" parent="Panel7"]
-layout_mode = 0
-offset_left = 19.0
-offset_top = 13.0
-offset_right = 199.0
-offset_bottom = 44.0
+[node name="ChatName" type="LineEdit" parent="HBox/LobbyContainer/Chat/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 placeholder_text = "Chat Name"
 
-[node name="Chat" type="Panel" parent="Panel7"]
-layout_mode = 0
-offset_left = 222.0
-offset_top = 3.0
-offset_right = 536.0
-offset_bottom = 255.0
+[node name="HBoxContainer" type="HBoxContainer" parent="HBox/LobbyContainer/Chat/VBoxContainer"]
+layout_mode = 2
 
-[node name="ChatText" type="LineEdit" parent="Panel7/Chat"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -31.0
-offset_right = -82.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="JoinGroupChatRoom" type="Button" parent="HBox/LobbyContainer/Chat/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Group Chat"
+
+[node name="JoinChatRoom" type="Button" parent="HBox/LobbyContainer/Chat/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Chat"
+
+[node name="Chat" type="PanelContainer" parent="HBox/LobbyContainer/Chat/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/Chat/VBoxContainer/Chat"]
+layout_mode = 2
+
+[node name="ChatTextLineEdit" type="LineEdit" parent="HBox/LobbyContainer/Chat/VBoxContainer/Chat/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 placeholder_text = "Chat Text Here"
 
-[node name="SubmitChat" type="Button" parent="Panel7/Chat"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -75.0
-offset_top = -33.0
-grow_horizontal = 0
-grow_vertical = 0
+[node name="SubmitChat" type="Button" parent="HBox/LobbyContainer/Chat/VBoxContainer/Chat/VBoxContainer"]
+layout_mode = 2
 text = ">"
 
-[node name="TabContainer" type="TabContainer" parent="Panel7/Chat"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -31.0
-offset_bottom = -33.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="UsernameContainer" type="TabContainer" parent="HBox/LobbyContainer/Chat/VBoxContainer/Chat/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 current_tab = 0
 
-[node name="username" type="TextEdit" parent="Panel7/Chat/TabContainer"]
+[node name="username" type="TextEdit" parent="HBox/LobbyContainer/Chat/VBoxContainer/Chat/VBoxContainer/UsernameContainer"]
 layout_mode = 2
 editable = false
 wrap_mode = 1
 metadata/_tab_index = 0
 
-[node name="JoinDirectChat" type="Button" parent="Panel7"]
-layout_mode = 0
-offset_left = 57.0
-offset_top = 161.0
-offset_right = 187.0
-offset_bottom = 205.0
+[node name="JoinDirectChat" type="Button" parent="HBox/LobbyContainer/Chat/VBoxContainer"]
+layout_mode = 2
 text = "Join Direct Chat"
 
-[node name="Panel8" type="Panel" parent="."]
+[node name="CreateParty" type="PanelContainer" parent="HBox/LobbyContainer"]
 visible = false
-layout_mode = 0
-offset_left = 25.0
-offset_top = 302.0
-offset_right = 218.0
-offset_bottom = 428.0
+layout_mode = 2
+metadata/_tab_index = 6
 
-[node name="CreateParty" type="Button" parent="Panel8"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 14.0
-offset_right = 125.0
-offset_bottom = 51.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/CreateParty"]
+layout_mode = 2
+
+[node name="CreateParty" type="Button" parent="HBox/LobbyContainer/CreateParty/VBoxContainer"]
+layout_mode = 2
 text = "Create Party"
 
-[node name="Panel" type="Panel" parent="Panel8"]
-layout_mode = 0
-offset_left = 202.0
-offset_right = 422.0
-offset_bottom = 150.0
+[node name="Panel" type="PanelContainer" parent="HBox/LobbyContainer/CreateParty/VBoxContainer"]
+layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel8/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 9.0
-offset_top = 7.0
-offset_right = -13.0
-offset_bottom = -16.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/CreateParty/VBoxContainer/Panel"]
+layout_mode = 2
 
-[node name="Panel2" type="Panel" parent="Panel8"]
+[node name="ChannelMessagePanel" type="PanelContainer" parent="HBox/LobbyContainer/CreateParty/VBoxContainer"]
+unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = -6.0
-offset_top = 139.0
-offset_right = 178.0
-offset_bottom = 257.0
+layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel8/Panel2"]
-layout_mode = 0
-offset_left = 51.0
-offset_top = 24.0
-offset_right = 141.0
-offset_bottom = 47.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/CreateParty/VBoxContainer/ChannelMessagePanel"]
+layout_mode = 2
+
+[node name="ChannelMessageLabel" type="Label" parent="HBox/LobbyContainer/CreateParty/VBoxContainer/ChannelMessagePanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 text = "Join Party?"
 
-[node name="JoinPartyNo" type="Button" parent="Panel8/Panel2"]
-layout_mode = 0
-offset_left = 19.0
-offset_top = 72.0
-offset_right = 78.0
-offset_bottom = 103.0
+[node name="JoinPartyNo" type="Button" parent="HBox/LobbyContainer/CreateParty/VBoxContainer/ChannelMessagePanel/VBoxContainer"]
+layout_mode = 2
 text = "No"
 
-[node name="JoinPartyYes" type="Button" parent="Panel8/Panel2"]
-layout_mode = 0
-offset_left = 111.0
-offset_top = 73.0
-offset_right = 170.0
-offset_bottom = 104.0
+[node name="JoinPartyYes" type="Button" parent="HBox/LobbyContainer/CreateParty/VBoxContainer/ChannelMessagePanel/VBoxContainer"]
+layout_mode = 2
 text = "Yes"
 
-[node name="TradeSystem" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 22.0
-offset_top = 202.0
-offset_right = 810.0
-offset_bottom = 632.0
+[node name="TradeSystem" type="PanelContainer" parent="HBox/LobbyContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 7
 
-[node name="AddItemToInventory" type="Button" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 29.0
-offset_top = 27.0
-offset_right = 176.0
-offset_bottom = 85.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/TradeSystem"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer"]
+layout_mode = 2
+text = "Inventory"
+
+[node name="GridContainer" type="GridContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="AddItemToInventory" type="Button" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "Ping RPC"
 
-[node name="GetInventory" type="Button" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 29.0
-offset_top = 99.0
-offset_right = 176.0
-offset_bottom = 157.0
+[node name="GetInventory" type="Button" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "Get Inventory"
 
-[node name="SendTradeOffer" type="Button" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 29.0
-offset_top = 163.0
-offset_right = 176.0
-offset_bottom = 221.0
+[node name="SendTradeOffer" type="Button" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "Send Trade Offer"
 
-[node name="GetTradeOffers" type="Button" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 29.0
-offset_top = 228.0
-offset_right = 176.0
-offset_bottom = 286.0
+[node name="GetTradeOffers" type="Button" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "Get Trade Offers"
 
-[node name="AcceptTradeOffer2" type="Button" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 352.0
-offset_right = 183.0
-offset_bottom = 410.0
+[node name="AcceptTradeOffer2" type="Button" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "Accept Trade Offer"
 
-[node name="CancelTradeOffer" type="Button" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 29.0
-offset_top = 291.0
-offset_right = 176.0
-offset_bottom = 349.0
+[node name="CancelTradeOffer" type="Button" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "Cancel Trade Offer"
 
-[node name="Panel" type="Panel" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 482.0
-offset_top = 20.0
-offset_right = 774.0
-offset_bottom = 356.0
+[node name="Panel" type="PanelContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer"]
+layout_mode = 2
 
-[node name="Panel" type="Panel" parent="TradeSystem/Panel"]
-layout_mode = 0
-offset_right = 292.0
-offset_bottom = 155.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel"]
+layout_mode = 2
 
-[node name="Panel2" type="Panel" parent="TradeSystem/Panel"]
-layout_mode = 0
-offset_top = 178.0
-offset_right = 292.0
-offset_bottom = 333.0
+[node name="Panel" type="Panel" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
 
-[node name="FriendNameLabel" type="Label" parent="TradeSystem/Panel"]
-layout_mode = 0
-offset_top = 155.0
-offset_right = 94.0
-offset_bottom = 178.0
+[node name="Panel2" type="Panel" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FriendNameLabel" type="Label" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
 text = "Other User: "
 
-[node name="Label2" type="Label" parent="TradeSystem/Panel"]
-layout_mode = 0
-offset_left = 4.0
-offset_top = -22.0
-offset_right = 98.0
-offset_bottom = 1.0
+[node name="Label2" type="Label" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
 text = "My Inventory"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TradeSystem/Panel"]
-layout_mode = 0
-offset_right = 293.0
-offset_bottom = 153.0
+[node name="TradeVbox1" type="VBoxContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="TradeSystem/Panel"]
-layout_mode = 0
-offset_top = 183.0
-offset_right = 293.0
-offset_bottom = 336.0
+[node name="TradeVBox2" type="VBoxContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 
-[node name="TradeOffers" type="Panel" parent="TradeSystem"]
-layout_mode = 0
-offset_left = 196.0
-offset_top = 21.0
-offset_right = 473.0
-offset_bottom = 349.0
+[node name="TradeOffers" type="PanelContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer"]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="TradeSystem/TradeOffers"]
-layout_mode = 0
-offset_top = -21.0
-offset_right = 40.0
-offset_bottom = 2.0
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/TradeOffers"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/TradeOffers/VBoxContainer2"]
+layout_mode = 2
 text = "Trade Offers"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TradeSystem/TradeOffers"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/LobbyContainer/TradeSystem/VBoxContainer/TradeOffers/VBoxContainer2"]
+layout_mode = 2
 
-[connection signal="button_down" from="Panel2/LoginButton" to="." method="_on_login_button_button_down"]
-[connection signal="button_down" from="Data Pannel/StoreData" to="." method="_on_store_data_button_down"]
-[connection signal="button_down" from="Data Pannel/GetData" to="." method="_on_get_data_button_down"]
-[connection signal="button_down" from="Data Pannel/ListData" to="." method="_on_list_data_button_down"]
-[connection signal="button_down" from="Panel3/JoinCreateMatch" to="." method="_on_join_create_match_button_down"]
-[connection signal="button_down" from="Panel3/Ping" to="." method="_on_ping_button_down"]
-[connection signal="button_down" from="Panel3/Matchmaking" to="." method="_on_matchmaking_button_down"]
-[connection signal="button_down" from="Panel3/Button" to="." method="_on_button_button_down"]
-[connection signal="button_down" from="Panel4/BlockFriends" to="." method="_on_block_friends_button_down"]
-[connection signal="button_down" from="Panel4/GetFriends" to="." method="_on_get_friends_button_down"]
-[connection signal="button_down" from="Panel4/AddFriend" to="." method="_on_add_friend_button_down"]
-[connection signal="button_down" from="Panel4/AddFriend/RemoveFriend" to="." method="_on_remove_friend_button_down"]
-[connection signal="button_down" from="Panel5/GetGroupMemebers" to="." method="_on_get_group_memebers_button_down"]
-[connection signal="button_down" from="Panel5/CreateGroup" to="." method="_on_create_group_button_down"]
-[connection signal="button_down" from="Panel6/CreateGroup" to="." method="_on_create_group_button_down"]
-[connection signal="button_down" from="Panel6/AddUserToGroup" to="." method="_on_add_user_to_group_button_down"]
-[connection signal="button_down" from="Panel6/AddUserToGroup2" to="." method="_on_add_user_to_group_2_button_down"]
-[connection signal="button_down" from="Panel6/List Groups" to="." method="_on_list_groups_button_down"]
-[connection signal="toggled" from="Panel6/CheckButton" to="." method="_on_check_button_toggled"]
-[connection signal="button_down" from="Panel6/PromoteUser" to="." method="_on_promote_user_button_down"]
-[connection signal="button_down" from="Panel6/KickUser" to="." method="_on_kick_user_button_down"]
-[connection signal="button_down" from="Panel6/DemoteUser" to="." method="_on_demote_user_button_down"]
-[connection signal="button_down" from="Panel6/BanUser" to="." method="_on_ban_user_button_down"]
-[connection signal="button_down" from="Panel6/LeaveGroup" to="." method="_on_leave_group_button_down"]
-[connection signal="button_down" from="Panel6/DeleteGroup" to="." method="_on_delete_group_button_down"]
-[connection signal="button_down" from="Panel7/JoinGroupChatRoom" to="." method="_on_join_group_chat_room_button_down"]
-[connection signal="button_down" from="Panel7/JoinChatRoom" to="." method="_on_join_chat_room_button_down"]
-[connection signal="button_down" from="Panel7/Chat/SubmitChat" to="." method="_on_submit_chat_button_down"]
-[connection signal="button_down" from="Panel7/JoinDirectChat" to="." method="_on_join_direct_chat_button_down"]
-[connection signal="button_down" from="Panel8/CreateParty" to="." method="_on_create_party_button_down"]
-[connection signal="button_down" from="Panel8/Panel2/JoinPartyNo" to="." method="_on_join_party_no_button_down"]
-[connection signal="button_down" from="Panel8/Panel2/JoinPartyYes" to="." method="_on_join_party_yes_button_down"]
-[connection signal="button_down" from="TradeSystem/AddItemToInventory" to="." method="_on_ping_rpc_button_down"]
-[connection signal="button_down" from="TradeSystem/GetInventory" to="." method="_on_get_inventory_button_down"]
-[connection signal="button_down" from="TradeSystem/SendTradeOffer" to="." method="_on_send_trade_offer_button_down"]
-[connection signal="button_down" from="TradeSystem/GetTradeOffers" to="." method="_on_get_trade_offers_button_down"]
-[connection signal="button_down" from="TradeSystem/AcceptTradeOffer2" to="." method="_on_accept_trade_offer_button_down"]
-[connection signal="button_down" from="TradeSystem/CancelTradeOffer" to="." method="_on_cancel_trade_offer_button_down"]
+[node name="UserInformationDisplay" parent="HBox" instance=ExtResource("2_qmkq0")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 105)
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="Authentication" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Tabs" type="TabContainer" parent="Authentication"]
+layout_mode = 2
+current_tab = 0
+
+[node name="Login" parent="Authentication/Tabs" instance=ExtResource("4_4xlfs")]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Register" parent="Authentication/Tabs" instance=ExtResource("5_wys0s")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="NotificationContainer" parent="." instance=ExtResource("2_lanui")]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 8
+
+[connection signal="button_down" from="HBox/LobbyContainer/Friend List/HBoxContainer/VBox/BlockFriends" to="." method="_on_block_friends_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Friend List/HBoxContainer/VBox/GridContainer/AddFriend" to="." method="_on_add_friend_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Friend List/HBoxContainer/VBox/RemoveFriend" to="." method="_on_remove_friend_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Friend List/HBoxContainer/VBox/GetFriends" to="." method="_on_get_friends_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer/JoinCreateMatch" to="." method="_on_join_create_match_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer/Ping" to="." method="_on_ping_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer/Matchmaking" to="." method="_on_matchmaking_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Match Finder/VBoxContainer/GridContainer/Button" to="." method="_on_button_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Data Panel/VBoxContainer/StoreData" to="." method="_on_store_data_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Data Panel/VBoxContainer/GetData" to="." method="_on_get_data_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Data Panel/VBoxContainer/ListData" to="." method="_on_list_data_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Admin Panel/VBoxContainer/GetGroupMemebers" to="." method="_on_get_group_memebers_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Admin Panel/VBoxContainer/CreateGroup" to="." method="_on_create_group_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/CreateGroup" to="." method="_on_create_group_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/AddUserToGroup" to="." method="_on_add_user_to_group_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/AddUserToGroup2" to="." method="_on_add_user_to_group_2_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/List Groups" to="." method="_on_list_groups_button_down"]
+[connection signal="toggled" from="HBox/LobbyContainer/Group Manager/VBoxContainer/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/PromoteUser" to="." method="_on_promote_user_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/KickUser" to="." method="_on_kick_user_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/DemoteUser" to="." method="_on_demote_user_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/LeaveGroup" to="." method="_on_leave_group_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Group Manager/VBoxContainer/DeleteGroup" to="." method="_on_delete_group_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Chat/VBoxContainer/HBoxContainer/JoinGroupChatRoom" to="." method="_on_join_group_chat_room_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Chat/VBoxContainer/HBoxContainer/JoinChatRoom" to="." method="_on_join_chat_room_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Chat/VBoxContainer/Chat/VBoxContainer/SubmitChat" to="." method="_on_submit_chat_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/Chat/VBoxContainer/JoinDirectChat" to="." method="_on_join_direct_chat_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/CreateParty/VBoxContainer/CreateParty" to="." method="_on_create_party_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/CreateParty/VBoxContainer/ChannelMessagePanel/VBoxContainer/JoinPartyNo" to="." method="_on_join_party_no_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/CreateParty/VBoxContainer/ChannelMessagePanel/VBoxContainer/JoinPartyYes" to="." method="_on_join_party_yes_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer/AddItemToInventory" to="." method="_on_ping_rpc_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer/GetInventory" to="." method="_on_get_inventory_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer/SendTradeOffer" to="." method="_on_send_trade_offer_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer/GetTradeOffers" to="." method="_on_get_trade_offers_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer/AcceptTradeOffer2" to="." method="_on_accept_trade_offer_button_down"]
+[connection signal="button_down" from="HBox/LobbyContainer/TradeSystem/VBoxContainer/GridContainer/CancelTradeOffer" to="." method="_on_cancel_trade_offer_button_down"]
+[connection signal="login" from="Authentication/Tabs/Login" to="." method="_on_login_pressed"]
+[connection signal="register_account" from="Authentication/Tabs/Register" to="." method="_on_register_account_pressed"]

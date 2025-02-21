@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3 uid="uid://dd2ekb3yor3hh"]
+
+[ext_resource type="Script" path="res://Authentication/LoginPanel/LoginPanel.gd" id="1_vpvtg"]
+
+[node name="LoginPanel" type="PanelContainer"]
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_vpvtg")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 15
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Login"
+horizontal_alignment = 1
+
+[node name="Grid" type="GridContainer" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 15
+columns = 2
+
+[node name="Label" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Email"
+
+[node name="EmailInput" type="LineEdit" parent="VBox/Grid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+placeholder_text = "test@gmail.com"
+
+[node name="Label2" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Password"
+
+[node name="PasswordField" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="PasswordInput" type="LineEdit" parent="VBox/Grid/PasswordField"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "password"
+secret = true
+
+[node name="ShowHide" type="Button" parent="VBox/Grid/PasswordField"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Show"
+
+[node name="LoginButton" type="Button" parent="VBox"]
+layout_mode = 2
+text = "Submit"
+
+[connection signal="toggled" from="VBox/Grid/PasswordField/ShowHide" to="." method="_on_show_hide_toggled"]
+[connection signal="pressed" from="VBox/LoginButton" to="." method="_on_login_button_pressed"]

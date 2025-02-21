@@ -1,0 +1,91 @@
+[gd_scene load_steps=6 format=3 uid="uid://cvedwg86rsyp2"]
+
+[ext_resource type="Script" path="res://Lobby/UserInformationDisplay/UserInformationDisplay.gd" id="1_gldpw"]
+[ext_resource type="StyleBox" uid="uid://dqy54jim8vxkk" path="res://Styles/DarkBackgroundLabel.tres" id="1_k82p0"]
+
+[sub_resource type="Theme" id="Theme_1nxb0"]
+Label/font_sizes/font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pcwbd"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.172297, 0.265428, 0.259591, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_j2bj2"]
+font_size = 18
+
+[node name="UserInformationDisplay" type="PanelContainer"]
+offset_right = 306.0
+offset_bottom = 139.0
+size_flags_vertical = 0
+theme = SubResource("Theme_1nxb0")
+theme_override_styles/panel = SubResource("StyleBoxFlat_pcwbd")
+script = ExtResource("1_gldpw")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="DisplayNameText" type="Label" parent="VBox/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Informações do jogador"
+label_settings = SubResource("LabelSettings_j2bj2")
+
+[node name="Button" type="Button" parent="VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Hide"
+
+[node name="Grid" type="GridContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 5
+columns = 3
+
+[node name="UserAccountLabel" type="Label" parent="VBox/Grid"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+text = "Username"
+
+[node name="UserAccountText" type="LineEdit" parent="VBox/Grid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(155, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = ExtResource("1_k82p0")
+editable = false
+
+[node name="CopyUser" type="Button" parent="VBox/Grid"]
+layout_mode = 2
+text = "Copy"
+
+[node name="EmailLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Email"
+
+[node name="EmailText" type="LineEdit" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = ExtResource("1_k82p0")
+editable = false
+
+[node name="CopyEmail" type="Button" parent="VBox/Grid"]
+layout_mode = 2
+text = "Copy"
+
+[connection signal="pressed" from="VBox/HBox/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="VBox/Grid/CopyUser" to="." method="_on_copy_user_pressed"]
+[connection signal="pressed" from="VBox/Grid/CopyEmail" to="." method="_on_copy_email_pressed"]

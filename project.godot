@@ -18,6 +18,10 @@ config/icon="res://icon.svg"
 
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [dotnet]
 
 project/assembly_name="Nakama Integration Tutorial"

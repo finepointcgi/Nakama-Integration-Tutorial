@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bg6xgsfypi4gr"]
+
+[ext_resource type="Script" path="res://NotificationContainer/NotificationContainer.gd" id="1_n2vfd"]
+[ext_resource type="PackedScene" uid="uid://drftmonotxben" path="res://NotificationLabel/NotificationLabel.tscn" id="2_15k87"]
+
+[node name="NotificationContainer" type="VBoxContainer"]
+size_flags_horizontal = 8
+alignment = 2
+script = ExtResource("1_n2vfd")
+notification_label_scene = ExtResource("2_15k87")
+notification_time = 5.0
