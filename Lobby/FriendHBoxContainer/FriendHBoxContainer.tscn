@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://c25altqf87k2j"]
+
+[ext_resource type="Script" path="res://Lobby/FriendHBoxContainer/FriendHBoxContainer.gd" id="1_xe2aw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_473xs"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.845302, 0.413199, 0.385703, 1)
+
+[node name="FriendHBoxContainer" type="HBoxContainer"]
+theme_override_constants/separation = 15
+script = ExtResource("1_xe2aw")
+
+[node name="DisplayName" type="Label" parent="."]
+layout_mode = 2
+
+[node name="Trade" type="Button" parent="."]
+layout_mode = 2
+text = "Trade"
+
+[node name="Block" type="Button" parent="."]
+layout_mode = 2
+text = "Block"
+
+[node name="Delete" type="Button" parent="."]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_473xs")
+text = "Delete"

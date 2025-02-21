@@ -18,4 +18,3 @@ The generated code is designed to be supported Godot Engine `3.1+`.
 ### Limitations
 
 The code generator has __only__ been checked against the Swagger specification generated for Nakama server. YMMV.
-

@@ -1,6 +1,8 @@
 extends Control
 class_name NakamaMultiplayer
 
+@export var friends_packed_scene : PackedScene
+
 var session : NakamaSession # this is the session
 var client : NakamaClient # this is the client {session}
 var socket : NakamaSocket # connection to nakama
@@ -17,14 +19,56 @@ var party
 
 signal OnStartGame()
 
+@onready var lobby_container : TabContainer = %LobbyContainer
+@onready var authentication : CenterContainer = $Authentication
+
+@onready var match_name : LineEdit = %MatchName
+@onready var add_friend : Button = %AddFriend
+@onready var friends_container : VBoxContainer = %FriendsContainer
+@onready var add_friend_text : LineEdit = %AddFriendText
+@onready var group_name : LineEdit = %GroupName
+@onready var group_name2 : LineEdit = %GroupName2
+@onready var group_desc : LineEdit = %GroupDesc
+@onready var groupvbox : VBoxContainer = %GroupVBox
+@onready var group_query : LineEdit = %GroupQuery
+@onready var panel6vbox : VBoxContainer = %Panel6Vbox
+@onready var user_to_manager : LineEdit = %UserToManage
+@onready var chat_name : LineEdit = %ChatName
+@onready var username_container : TabContainer = %UsernameContainer
+@onready var channel_message_panel : Control = %ChannelMessagePanel
+@onready var channel_message_label : Label = %ChannelMessageLabel
+@onready var chat_text_line_edit : LineEdit = %ChatTextLineEdit
+@onready var trade_vbox1 : VBoxContainer = %TradeVbox1
+@onready var trade_vbox2 : VBoxContainer = %TradeVBox2
+
+@onready var notificatin_container : NotificationContainer = $NotificationContainer 
+@onready var user_information_display : PanelContainer = %UserInformationDisplay
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("AGgpLqM45wdkEIH4PMvs5c90T6HxtrBV", "127.0.0.1", 7350, "https")
-	
-	pass # Replace with function body.
 
-func updateUserInfo(username, displayname, avaterurl = "", language = "en", location = "us", timezone = "est"):
-	await client.update_account_async(session, username, displayname, avaterurl, language, location, timezone)
+	client = Nakama.create_client("defaultkey", 
+								 "127.0.0.1", 
+								 7350, 
+								 "http")
+						
+	lobby_container.visible = false
+	authentication.visible = true
+	user_information_display.visible = false
+
+func updateUserInfo(username: String, 
+					displayname : String, 
+					avaterurl : String = "", 
+					language : String = "en", 
+					location : String = "us", 
+					timezone : String = "est"):
+	await client.update_account_async(session, 
+									  username, 
+									  displayname, 
+									  avaterurl, 
+									  language, 
+									  location, 
+									  timezone)
 
 func onMatchPresence(presence : NakamaRTAPI.MatchPresenceEvent):
 	print(presence)
@@ -41,13 +85,70 @@ func onSocketClosed():
 func onSocketReceivedError(err):
 	print("Socket Error:" + str(err))
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _on_register_account_pressed(username: String, 
+								  email: String, 
+								  password: String) -> void:
 
+	session = await client.authenticate_email_async(email , password)
 
-func _on_login_button_button_down():
-	session = await client.authenticate_email_async($Panel2/EmailInput.text , $Panel2/PasswordInput.text,)
+	if not session._created:
+		client.delete_account_async(session)
+		notificatin_container.create_notification("Já existe uma conta com essas credenciais!",
+												  NotificationContainer.NotificationType.ERROR)
+		return
+
+	if session.is_valid():
+		notificatin_container.create_notification("Registrado com sucesso!")
+	elif session.is_exception():
+		var exception : NakamaException = session.get_exception()
+		notificatin_container.handle_exception(exception.status_code)
+		return
+		
+	await client.update_account_async(session, null, username)
+	
+	var users = await client.get_users_async(session, [session.user_id])
+	
+	var u = NakamaAPI.ApiUser.new()
+	
+	if users.users and users.users.size() > 0:
+		u = users.users[0] as NakamaAPI.ApiUser
+	
+	connect_user_to_lobby(u)
+
+func _on_login_pressed(email: String, password: String) -> void:
+
+	session = await client.authenticate_email_async(email , password)
+	
+	if session._created:
+		client.delete_account_async(session)
+		notificatin_container.create_notification("Não existe conta com essas credenciais!",
+												  NotificationContainer.NotificationType.ERROR)
+		return
+	
+	if session.is_valid():
+		notificatin_container.create_notification("Logado com sucesso!")
+	elif session.is_exception():
+		var exception : NakamaException = session.get_exception()
+		notificatin_container.handle_exception(exception.status_code)
+		return
+		
+	var users = await client.get_users_async(session, [session.user_id])
+	
+	var u = NakamaAPI.ApiUser.new()
+	
+	if users.users and users.users.size() > 0:
+		u = users.users[0] as NakamaAPI.ApiUser
+		
+	print("\n\nmy_user: ", u, "\n\n")
+		
+	connect_user_to_lobby(u)
+	
+func connect_user_to_lobby(user: NakamaAPI.ApiUser) -> void:
+	lobby_container.visible = true
+	authentication.visible = false
+	user_information_display.update_user_info(user)
+	user_information_display.visible = true
+	print("\n\nSession is valid: = %s\n\n" % str(session.is_valid()))
 	
 	#var deviceid = OS.get_unique_id()
 	#session = await client.authenticate_device_async(deviceid)
@@ -75,9 +176,7 @@ func _on_login_button_button_down():
 	
 	setupMultiplayerBridge()
 	subToFriendChannels()
-	pass # Replace with function body.
-
-
+	update_friends_list()
 
 func setupMultiplayerBridge():
 	multiplayerBridge = NakamaMultiplayerBridge.new(socket)
@@ -154,11 +253,10 @@ func _on_list_data_button_down():
 	var dataList = await client.list_storage_objects_async(session, "saves",session.user_id, 5)
 	for i in dataList.objects:
 		print(i)
-	pass # Replace with function body.
 
 
 func _on_join_create_match_button_down():
-	multiplayerBridge.join_named_match($Panel3/MatchName.text)
+	multiplayerBridge.join_named_match(match_name.text)
 	
 	#createdMatch = await socket.create_match_async($Panel3/MatchName.text)
 	#if createdMatch.is_exception():
@@ -202,56 +300,77 @@ func onMatchMakerMatched(matched : NakamaRTAPI.MatchmakerMatched):
 
 ######### Friends 
 func _on_add_friend_button_down():
-	var id = [$Panel4/AddFriendText.text]
+
+	var id = [add_friend_text.text]
 	
 	var result = await client.add_friends_async(session, null, id)
-	pass # Replace with function body.
+	update_friends_list()
 
 
 func _on_get_friends_button_down():
+	update_friends_list()
+	
+func update_friends_list() -> void:
 	var result = await client.list_friends_async(session)
 	
+	clear_box(friends_container)
+	
 	for i in result.friends:
+		
+		var friends_hbox : FriendHBoxContainer = friends_packed_scene.instantiate()
+		
+		friends_container.add_child(friends_hbox)
+		friends_hbox.set_friend.call_deferred(i.user.display_name, 
+								onTrade.bind(i), 
+								remove_friend_from_username.bind(i.user.username),
+								block_friend_by_username.bind(i.user.username))
+		"""
 		var container = HBoxContainer.new()
 		var currentlabel = Label.new()
 		currentlabel.text = i.user.display_name
 		container.add_child(currentlabel)
-		print(i)
 		var currentButton = Button.new()
 		container.add_child(currentButton)
 		currentButton.text = "Trade"
 		#currentButton.text = "Invite"
 		currentButton.button_down.connect(onTrade.bind(i))
 		#currentButton.button_down.connect(onInviteToParty.bind(i))
-		$Panel4/Panel4/VBoxContainer.add_child(container)
-		
-	pass # Replace with function body.
+		"""
 
+func clear_box(box: BoxContainer) -> void:
+	
+	for child in box.get_children():
+		child.queue_free()
+		child = null
 
 func _on_remove_friend_button_down():
-	var result = await client.delete_friends_async(session,[], [$Panel4/AddFriendText.text])
-	pass # Replace with function body.
+	remove_friend_from_username(add_friend_text.text)
 
+func remove_friend_from_username(username: String) -> void:
+	var result = await client.delete_friends_async(session,[], [username])
+	update_friends_list()
 
 func _on_block_friends_button_down():
-	var result = await client.block_friends_async(session,[], [$Panel4/AddFriendText.text])
-	pass # Replace with function body.
-
+	var result = await client.block_friends_async(session,[], [add_friend_text.text])
+	block_friend_by_username(add_friend_text.text)
+	
+func block_friend_by_username(username: String) -> void:
+	var result = await client.block_friends_async(session,[], [username])
 
 func _on_create_group_button_down():
-	var group = await client.create_group_async(session, $Panel6/GroupName.text, $Panel6/GroupDesc.text, "" , "en", true, 32)
+	var group = await client.create_group_async(session, group_name.text, group_desc.text, "" , "en", true, 32)
 	print(group)
 	pass # Replace with function body.
 
 
 func _on_get_group_memebers_button_down():
-	var result = await client.list_group_users_async(session, $Panel5/GroupName.text)
+	var result = await client.list_group_users_async(session, group_name2.text)
 	
 	for i in result.group_users:
 		var currentlabel = Label.new()
 		currentlabel.text = i.user.display_name
-		$Panel5/Panel4/GroupVBox.add_child(i.user.username)
-		print("users in group " + $Panel5/GroupName.text  + i.user.username)
+		groupvbox.add_child(i.user.username)
+		print("users in group " + group_name2.text  + i.user.username)
 	pass # Replace with function body.
 
 
@@ -274,13 +393,10 @@ func Ready(id):
 func StartGame():
 	OnStartGame.emit()
 	hide()
-	pass
 
 ####### Group 
 func _on_add_user_to_group_button_down():
 	await  client.join_group_async(session, selectedGroup.id)
-	pass # Replace with function body.
-
 
 func _on_add_user_to_group_2_button_down():
 	var users = await client.list_group_users_async(session,selectedGroup.id, 3)
@@ -288,7 +404,6 @@ func _on_add_user_to_group_2_button_down():
 	for user in users.group_users:
 		var u = user.user as NakamaAPI.ApiUser
 		await client.add_group_users_async(session, selectedGroup.id, [u.id])
-	pass # Replace with function body.
 
 
 func _on_check_button_toggled(toggled_on):
@@ -298,7 +413,7 @@ func _on_check_button_toggled(toggled_on):
 
 func _on_list_groups_button_down():
 	var limit = 10
-	var result = await client.list_groups_async(session, $Panel6/GroupQuery.text, limit, null, null, null)
+	var result = await client.list_groups_async(session, group_query.text, limit, null, null, null)
 	
 	for group in result.groups:
 		var vbox = VBoxContainer.new()
@@ -312,32 +427,28 @@ func _on_list_groups_button_down():
 		button.text = "Select Group"
 		hbox.add_child(button)
 		vbox.add_child(hbox)
-		$Panel6/Panel/VBoxContainer.add_child(vbox)
+		panel6vbox.add_child(vbox)
 	pass # Replace with function body.
 
 func onGroupSelectButton(group):
 	selectedGroup = group
-	
-
-
-
 
 func _on_promote_user_button_down():
-	var result : NakamaAPI.ApiUsers = await  client.get_users_async(session, [],[$Panel6/UserToManage.text], null)
+	var result : NakamaAPI.ApiUsers = await  client.get_users_async(session, [],[user_to_manager.text], null)
 	for u in result.users:
 		await client.promote_group_users_async(session, selectedGroup.id, [u.id])
 	pass # Replace with function body.
 
 
 func _on_demote_user_button_down():
-	var result : NakamaAPI.ApiUsers = await  client.get_users_async(session, [],[$Panel6/UserToManage.text], null)
+	var result : NakamaAPI.ApiUsers = await  client.get_users_async(session, [],[user_to_manager.text], null)
 	for u in result.users:
 		await client.demote_group_users_async(session, selectedGroup.id, [u.id])
 	pass # Replace with function body.
 
 
 func _on_kick_user_button_down():
-	var result : NakamaAPI.ApiUsers = await  client.get_users_async(session, [],[$Panel6/UserToManage.text], null)
+	var result : NakamaAPI.ApiUsers = await  client.get_users_async(session, [],[user_to_manager.text], null)
 	for u in result.users:
 		await client.kick_group_users_async(session, selectedGroup.id, [u.id])
 	pass # Replace with function body.
@@ -356,28 +467,25 @@ func _on_delete_group_button_down():
 ########## Chat Room Code
 func _on_join_chat_room_button_down():
 	var type = NakamaSocket.ChannelType.Room
-	currentChannel = await socket.join_chat_async($Panel7/ChatName.text, type, false, false)
+	currentChannel = await socket.join_chat_async(chat_name.text, type, false, false)
 	
 	print("channel id: " + currentChannel.id)
-	pass # Replace with function body.
 
 func onChannelMessage(message : NakamaAPI.ApiChannelMessage):
 	var content = JSON.parse_string(message.content)
 	if content.type == 0:
-		$Panel7/Chat/TabContainer.get_node(content.id).text += message.username + ": " + str(content.message) + "\n"
+		username_container.get_node(content.id).text += message.username + ": " + str(content.message) + "\n"
 	elif content.type == 1 && party == null:
-		$Panel8/Panel2.show()
+		channel_message_panel.show()
 		party = {"id" : content.partyID}
-		$Panel8/Panel2/Label.text = str(content.message)
-		pass
+		channel_message_label.text = str(content.message)
 
 func _on_submit_chat_button_down():
 	await socket.write_chat_message_async(currentChannel.id, {
-		 "message" : $Panel7/Chat/ChatText.text,
+		 "message" : chat_text_line_edit.text,
 		"id" : chatChannels[currentChannel.id].label,
 		"type" : 0
 		})
-	pass # Replace with function body.
 
 
 func _on_join_group_chat_room_button_down():
@@ -391,9 +499,9 @@ func _on_join_group_chat_room_button_down():
 		}
 	var currentEdit = TextEdit.new()
 	currentEdit.name = "currentGroup"
-	$Panel7/Chat/TabContainer.add_child(currentEdit)
+	username_container.add_child(currentEdit)
 	currentEdit.text = await listMessages(currentChannel)
-	$Panel7/Chat/TabContainer.tab_changed.connect(onChatTabChanged.bind(selectedGroup.id))
+	username_container.tab_changed.connect(onChatTabChanged.bind(selectedGroup.id))
 	
 	pass # Replace with function body.
 
@@ -423,13 +531,13 @@ func subToFriendChannels():
 		} 
 		var currentEdit = TextEdit.new()
 		currentEdit.name = i.user.username
-		$Panel7/Chat/TabContainer.add_child(currentEdit)
+		username_container.add_child(currentEdit)
 		currentEdit.text = await listMessages(channel)
-		$Panel7/Chat/TabContainer.tab_changed.connect(onChatTabChanged.bind(channel.id))
+		username_container.tab_changed.connect(onChatTabChanged.bind(channel.id))
 
 func _on_join_direct_chat_button_down():
 	var type = NakamaSocket.ChannelType.DirectMessage
-	var usersResult = await  client.get_users_async(session, [], [$Panel7/ChatName.text])
+	var usersResult = await  client.get_users_async(session, [], [chat_name.text])
 	if usersResult.users.size() > 0:
 		currentChannel = await socket.join_chat_async(usersResult.users[0].id, type, true, false)
 		
@@ -441,17 +549,12 @@ func _on_join_direct_chat_button_down():
 			if(message.content != "{}"):
 				var content = JSON.parse_string(message.content)
 			
-				$Panel7/Chat/ChatTextBox.text += message.username + ": " + str(content.message) + "\n"
-		
-	
-	pass # Replace with function body.
+				chat_text_line_edit.text += message.username + ": " + str(content.message) + "\n"
 
 ###### Party System
 
 func _on_create_party_button_down():
 	party = await  socket.create_party_async(false, 2)
-	
-	pass # Replace with function body.
 
 func onInviteToParty(friend):
 	var channel = await socket.join_chat_async(friend.user.id, NakamaSocket.ChannelType.DirectMessage)
@@ -468,12 +571,12 @@ func _on_join_party_yes_button_down():
 	var result = await  socket.join_party_async(party.id)
 	if result.is_exception():
 		print("failed to join party")
-	$Panel8/Panel2.hide()
+	channel_message_panel.hide()
 	pass # Replace with function body.
 	
 
 func _on_join_party_no_button_down():
-	$Panel8/Panel2.hide()
+	channel_message_panel.hide()
 	pass # Replace with function body.
 
 func onPartyPresence(presence : NakamaRTAPI.PartyPresenceEvent):
@@ -488,42 +591,45 @@ func _on_ping_rpc_button_down():
 	}
 	var rpcReturn = await  client.rpc_async(session, "addItemToInventory", JSON.stringify(item))
 	print(rpcReturn)
-	pass # Replace with function body.
 
 
 func _on_get_inventory_button_down():
 	var inventory = await getInventory(session.user_id)
-	removeMyChildren($TradeSystem/Panel/VBoxContainer)
+	removeMyChildren(trade_vbox1)
+	
+	if not inventory:
+		return
 	
 	for i in inventory:
 		var button = Button.new()
 		button.name = i.name
 		button.text = i.name
-		$TradeSystem/Panel/VBoxContainer.add_child(button)
+		trade_vbox1.add_child(button)
 		button.button_down.connect(setItemForTrade.bind(i, button, true))
 		var stylebox = StyleBoxFlat.new()
 		button.add_theme_stylebox_override("normal", stylebox)
-		
-	pass # Replace with function body.
 
 func getInventory(id):
-	var result = await client.rpc_async(session, "getInventory", JSON.stringify({"id" : id}))
+	var result = \
+	 await client.rpc_async(session, "getInventory", JSON.stringify({"id" : id}))
+	
+	if result is NakamaException:
+		return null
+	
 	var inventory = JSON.parse_string(result.payload)
 	return inventory
-	pass
-
 
 func onTrade(friend):
 	var inventory = await getInventory(friend.user.id)
 	PlayerToTradeWith = friend
-	removeMyChildren($TradeSystem/Panel/VBoxContainer2)
+	removeMyChildren(trade_vbox2)
 	
 	for i in inventory:
 		var button = Button.new()
 		button.name = i.name
 		button.text = i.name
 		button.button_down.connect(setItemForTrade.bind(i, button, false))
-		$TradeSystem/Panel/VBoxContainer2.add_child(button)
+		trade_vbox2.add_child(button)
 		var stylebox = StyleBoxFlat.new()
 		button.add_theme_stylebox_override("normal", stylebox)
 	pass
@@ -595,21 +701,21 @@ func _on_get_trade_offers_button_down():
 		var id = await client.get_users_async(session, [i.senderid], null)
 		button.text = id.users[0].display_name
 		button.button_down.connect(setTradeOffers.bind(i))
-		$TradeSystem/TradeOffers/VBoxContainer.add_child(button)
+		trade_vbox1.add_child(button)
 	pass # Replace with function body.
 
 func setTradeOffers(offer):
-	removeMyChildren($TradeSystem/Panel/VBoxContainer)
-	removeMyChildren($TradeSystem/Panel/VBoxContainer2)
+	removeMyChildren(trade_vbox1)
+	removeMyChildren(trade_vbox2)
 	
 	for i in offer.requestedItems:
 		var button = Button.new()
 		button.text = i.name
-		$TradeSystem/Panel/VBoxContainer.add_child(button)
+		trade_vbox1.add_child(button)
 	for i in offer.offerItems:
 		var button = Button.new()
 		button.text = i.name
-		$TradeSystem/Panel/VBoxContainer2.add_child(button)
+		trade_vbox2.add_child(button)
 	
 	currentTradeOffer = offer
 
