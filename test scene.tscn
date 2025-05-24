@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://p2ptqa1u1n1k"]
 
-[ext_resource type="Script" path="res://Client.gd" id="1_mtcsr"]
+[ext_resource type="Script" uid="uid://0u255g5ufq6d" path="res://Client.gd" id="1_mtcsr"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -131,12 +131,11 @@ offset_bottom = 121.0
 text = "List Data from Store"
 
 [node name="Panel3" type="Panel" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 15.0
-offset_top = 46.0
+offset_top = 213.0
 offset_right = 268.0
-offset_bottom = 269.0
+offset_bottom = 436.0
 
 [node name="JoinCreateMatch" type="Button" parent="Panel3"]
 layout_mode = 0
@@ -187,6 +186,7 @@ offset_bottom = 215.0
 text = "Start Game"
 
 [node name="Panel4" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 670.0
 offset_top = -2.0
@@ -645,6 +645,7 @@ offset_bottom = 104.0
 text = "Yes"
 
 [node name="TradeSystem" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 22.0
 offset_top = 202.0

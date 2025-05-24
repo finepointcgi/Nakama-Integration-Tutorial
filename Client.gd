@@ -19,7 +19,8 @@ signal OnStartGame()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("AGgpLqM45wdkEIH4PMvs5c90T6HxtrBV", "127.0.0.1", 7350, "https")
+	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
+
 	
 	pass # Replace with function body.
 
@@ -82,34 +83,59 @@ func _on_login_button_button_down():
 func setupMultiplayerBridge():
 	multiplayerBridge = NakamaMultiplayerBridge.new(socket)
 	multiplayerBridge.match_join_error.connect(onMatchJoinError)
+	multiplayerBridge.match_joined.connect(onMatchJoin)
 	var multiplayer = get_tree().get_multiplayer()
 	multiplayer.set_multiplayer_peer(multiplayerBridge.multiplayer_peer)
 	multiplayer.peer_connected.connect(onPeerConnected)
 	multiplayer.peer_disconnected.connect(onPeerDisconnected)
 	
+	# We'll initialize the local player in onMatchJoin instead
+	# to prevent duplication
+	print("Setting up multiplayer bridge")
+	
+	
 func onPeerConnected(id):
 	print("Peer connected id is : " + str(id))
 	
-	if !Players.has(id):
+	# Only add remote players that join, not ourselves
+	if id != multiplayer.get_unique_id() and !Players.has(id):
 		Players[id] = {
 			"name" : id,
 			"ready" : 0
 		}
-	if !Players.has(multiplayer.get_unique_id()):
-		Players[multiplayer.get_unique_id()]= {
-			"name" : multiplayer.get_unique_id(),
-			"ready" : 0
-		}
-	print(Players)
+		print("Added new remote player: ", id)
+	
+	print("Players after peer connected: ", Players)
+	
+	# If game already started, notify the new player
+	if get_tree().get_nodes_in_group("InGame").size() > 0:
+		notifyGameInProgress.rpc_id(id)
 	
 func onPeerDisconnected(id):
 	print("Peer disconnected id is : " + str(id))
+	
+	# Remove the disconnected player
+	if Players.has(id):
+		Players.erase(id)
+		# Notify other players about disconnection
+		playerDisconnected.rpc(id)
 	
 func onMatchJoinError(error):
 	print("Unable to join match: " + error.message)
 
 func onMatchJoin():
 	print("joined Match with id: " + multiplayerBridge.match_id)
+	
+	# Initialize local player ONLY here to prevent duplication
+	var unique_id = multiplayer.get_unique_id()
+	if !Players.has(unique_id):
+		Players[unique_id] = {
+			"name": unique_id,
+			"ready": 0
+		}
+		print("Added local player with ID:", unique_id)
+	
+	print("Players after match join: ", Players)
 func _on_store_data_button_down():
 	var saveGame = {
 		"name" : "username",
@@ -261,20 +287,60 @@ func _on_button_button_down():
 	
 @rpc("any_peer", "call_local")
 func Ready(id):
+	# Initialize player data if not exists
+	if !Players.has(id):
+		Players[id] = {
+			"name": id,
+			"ready": 0
+		}
+		
 	Players[id].ready = 1
+	
 	if multiplayer.is_server():
 		var readyPlayers = 0
 		for i in Players:
 			if Players[i].ready == 1:
 				readyPlayers += 1
-		if readyPlayers == Players.size():
+		print("players is ", Players)
+		# Start game if all players are ready
+		if Players.size() > 0 && readyPlayers == Players.size():
 			StartGame.rpc()
 
 @rpc("any_peer", "call_local")
 func StartGame():
+	print("Starting game with Players dictionary:", Players)
+	# Count how many unique players we have
+	print("Number of players in game:", Players.size())
+	
 	OnStartGame.emit()
 	hide()
 	pass
+
+@rpc("any_peer")
+func notifyGameInProgress():
+	# New player joining in-progress game
+	print("Received notification that game is in progress, joining...")
+	
+	# Make sure we're in the Players dictionary
+	var unique_id = multiplayer.get_unique_id()
+	if !Players.has(unique_id):
+		Players[unique_id] = {
+			"name": unique_id,
+			"ready": 1  # Player is ready immediately since game is in progress
+		}
+	else:
+		Players[unique_id].ready = 1
+	
+	# Start the game for this player
+	OnStartGame.emit()
+	hide()
+
+@rpc("any_peer", "call_local")
+func playerDisconnected(id):
+	# Handle player disconnection during gameplay
+	var player_node = get_tree().get_root().get_node_or_null(str(id))
+	if player_node:
+		player_node.queue_free()
 
 ####### Group 
 func _on_add_user_to_group_button_down():
@@ -482,9 +548,9 @@ func onPartyPresence(presence : NakamaRTAPI.PartyPresenceEvent):
 ############### RPC TRADE SYSTEM
 func _on_ping_rpc_button_down():
 	var item = {
-		"name" = "sword",
-		"type" = "Weapon",
-		"rarity" = "common"
+		"name": "sword",
+		"type": "Weapon",
+		"rarity": "common"
 	}
 	var rpcReturn = await  client.rpc_async(session, "addItemToInventory", JSON.stringify(item))
 	print(rpcReturn)
@@ -562,9 +628,9 @@ func _on_send_trade_offer_button_down():
 	var requestedItems = ItemsToTradeFor
 	
 	var payload = {
-		"recieverid" : receiverID,
-		"offerItems" : offerItems, 
-		"requestedItems" : requestedItems
+		"recieverid": receiverID,
+		"offerItems": offerItems,
+		"requestedItems": requestedItems
 	}
 	if offerItems == [] || requestedItems == []:
 		print("cannot send empty offer")

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ch4g8yusgdhm2"]
 
 [ext_resource type="Texture2D" uid="uid://bkpla8vcdb8o" path="res://Texture/TX Tileset Ground.png" id="1_iivnr"]
-[ext_resource type="Script" path="res://SceneManager.gd" id="1_u3ux4"]
+[ext_resource type="Script" uid="uid://74q4erdrymhr" path="res://SceneManager.gd" id="1_u3ux4"]
 [ext_resource type="PackedScene" uid="uid://cexkbcrii6gsh" path="res://player.tscn" id="3_cbm6k"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ahsbe"]

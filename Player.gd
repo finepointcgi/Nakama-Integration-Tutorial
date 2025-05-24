@@ -7,6 +7,12 @@ const JUMP_VELOCITY = -400.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+# Called when the node enters the scene tree
+func _ready():
+	print("Player instance created: ", name)
+	if name == str(multiplayer.get_unique_id()):
+		# Set a slightly different color for local player
+		modulate = Color(0.8, 1, 0.8)
 
 func _physics_process(delta):
 	if name == str(multiplayer.get_unique_id()):
@@ -27,8 +33,12 @@ func _physics_process(delta):
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 
 		move_and_slide()
-		syncPos.rpc(global_position)
+		
+		# Only sync position if it has changed significantly
+		if velocity.length() > 0.5:
+			syncPos.rpc(global_position)
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func syncPos(p):
-	global_position = p
+	if name != str(multiplayer.get_unique_id()):  # Only update remote players
+		global_position = p
