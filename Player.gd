@@ -7,6 +7,10 @@ const JUMP_VELOCITY = -400.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+func _ready() -> void:
+	if name == str(multiplayer.get_unique_id()):
+		modulate = Color(0.8,1,0.8)
+		
 
 func _physics_process(delta):
 	if name == str(multiplayer.get_unique_id()):
@@ -27,7 +31,8 @@ func _physics_process(delta):
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 
 		move_and_slide()
-		syncPos.rpc(global_position)
+		if velocity.length() > 0.5:
+			syncPos.rpc(global_position)
 
 @rpc("any_peer")
 func syncPos(p):

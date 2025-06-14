@@ -19,7 +19,7 @@ signal OnStartGame()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	client = Nakama.create_client("AGgpLqM45wdkEIH4PMvs5c90T6HxtrBV", "127.0.0.1", 7350, "https")
+	client = Nakama.create_client("defaultkey", "127.0.0.1", 7350, "http")
 	
 	pass # Replace with function body.
 
@@ -27,11 +27,11 @@ func updateUserInfo(username, displayname, avaterurl = "", language = "en", loca
 	await client.update_account_async(session, username, displayname, avaterurl, language, location, timezone)
 
 func onMatchPresence(presence : NakamaRTAPI.MatchPresenceEvent):
-	print(presence)
-
+	#print(presence)
+	pass
 func onMatchState(state : NakamaRTAPI.MatchData):
-	print("data is : " + str(state.data))
-
+	#print("data is : " + str(state.data))
+	pass
 func onSocketConnected():
 	print("Socket Connected")
 
@@ -82,6 +82,7 @@ func _on_login_button_button_down():
 func setupMultiplayerBridge():
 	multiplayerBridge = NakamaMultiplayerBridge.new(socket)
 	multiplayerBridge.match_join_error.connect(onMatchJoinError)
+	multiplayerBridge.match_joined.connect(onMatchJoin)
 	var multiplayer = get_tree().get_multiplayer()
 	multiplayer.set_multiplayer_peer(multiplayerBridge.multiplayer_peer)
 	multiplayer.peer_connected.connect(onPeerConnected)
@@ -90,7 +91,7 @@ func setupMultiplayerBridge():
 func onPeerConnected(id):
 	print("Peer connected id is : " + str(id))
 	
-	if !Players.has(id):
+	if id != multiplayer.get_unique_id() and !Players.has(id):
 		Players[id] = {
 			"name" : id,
 			"ready" : 0
@@ -102,14 +103,32 @@ func onPeerConnected(id):
 		}
 	print(Players)
 	
+	# notify player of progress
+	if get_tree().get_nodes_in_group("InGame").size() > 0 && multiplayer.is_server(): #here
+		notifyGameInProgress.rpc_id(id)
+	
 func onPeerDisconnected(id):
 	print("Peer disconnected id is : " + str(id))
+	
+	if Players.has(id):
+		Players.erase(id)
+		playerDisconnected.rpc(id)
 	
 func onMatchJoinError(error):
 	print("Unable to join match: " + error.message)
 
 func onMatchJoin():
 	print("joined Match with id: " + multiplayerBridge.match_id)
+	
+	var uniqueId = multiplayer.get_unique_id()
+	if !Players.has(uniqueId):
+		Players[uniqueId] = {
+			"name":uniqueId,
+			"ready":0
+		}
+		print("Added local player with id", uniqueId)
+		
+	
 func _on_store_data_button_down():
 	var saveGame = {
 		"name" : "username",
@@ -261,20 +280,53 @@ func _on_button_button_down():
 	
 @rpc("any_peer", "call_local")
 func Ready(id):
+	
+	if !Players.has(id):
+		Players[id] = {
+			"name" : id,
+			"ready" : 0
+		}
+		
 	Players[id].ready = 1
 	if multiplayer.is_server():
 		var readyPlayers = 0
 		for i in Players:
 			if Players[i].ready == 1:
 				readyPlayers += 1
-		if readyPlayers == Players.size():
+		if Players.size() > 0 && readyPlayers == Players.size():
+			print("starting game")
 			StartGame.rpc()
+			
 
 @rpc("any_peer", "call_local")
 func StartGame():
 	OnStartGame.emit()
 	hide()
 	pass
+	
+@rpc("any_peer", "call_local")
+func playerDisconnected(id):
+	var player_node = get_tree().get_root().get_node_or_null(str(id))
+	if player_node:
+		player_node.queue_free()
+
+@rpc("any_peer")
+func notifyGameInProgress():
+	print("Recieved Progress")
+	
+	var unique_id = multiplayer.get_unique_id()
+	if !Players.has(unique_id):
+		Players[unique_id] = {
+			"name" : unique_id,
+			"ready" : 1
+		}
+	else:
+		Players[unique_id].ready = 1
+	
+	print("starting game")
+	OnStartGame.emit()
+	hide()
+
 
 ####### Group 
 func _on_add_user_to_group_button_down():
