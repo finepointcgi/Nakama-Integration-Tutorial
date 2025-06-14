@@ -16,12 +16,14 @@ func _ready():
 	if keys.size() == 0:
 		print("Warning: no players when starting game. Adding local player")
 		var localid = get_tree().get_multiplayer().get_unique_id()
-		NakamaMultiplayer.Players[localid] = {
-			"name" = localid, 
-			"ready" = 1
-		}
+		if localid > 0 and !NakamaMultiplayer.Players.has(localid):
+			NakamaMultiplayer.Players[localid] = {
+				"name" = localid, 
+				"ready" = 1
+			}
+			print("Added fallback local player: " + str(localid))
 		
-		keys = [localid]
+		keys = [localid] if localid > 0 else []
 	
 	keys.sort()
 	for i in keys:

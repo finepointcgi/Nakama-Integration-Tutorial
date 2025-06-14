@@ -91,17 +91,29 @@ func setupMultiplayerBridge():
 func onPeerConnected(id):
 	print("Peer connected id is : " + str(id))
 	
+	# Validate ID to prevent invalid IDs like 0
+	if id <= 0:
+		print("Warning: Invalid peer ID: " + str(id))
+		return
+	
+	# Only add the connecting peer if it's not already in the list
 	if id != multiplayer.get_unique_id() and !Players.has(id):
 		Players[id] = {
 			"name" : id,
 			"ready" : 0
 		}
-	if !Players.has(multiplayer.get_unique_id()):
-		Players[multiplayer.get_unique_id()]= {
-			"name" : multiplayer.get_unique_id(),
+		print("Added peer: " + str(id))
+	
+	# Add local player only once when first connecting
+	var local_id = multiplayer.get_unique_id()
+	if local_id > 0 and !Players.has(local_id):
+		Players[local_id] = {
+			"name" : local_id,
 			"ready" : 0
 		}
-	print(Players)
+		print("Added local player: " + str(local_id))
+	
+	print("Current players: ", Players)
 	
 	# notify player of progress
 	if get_tree().get_nodes_in_group("InGame").size() > 0 && multiplayer.is_server(): #here
@@ -121,12 +133,15 @@ func onMatchJoin():
 	print("joined Match with id: " + multiplayerBridge.match_id)
 	
 	var uniqueId = multiplayer.get_unique_id()
-	if !Players.has(uniqueId):
+	# Only add local player if it's valid and not already present
+	if uniqueId > 0 and !Players.has(uniqueId):
 		Players[uniqueId] = {
 			"name":uniqueId,
 			"ready":0
 		}
-		print("Added local player with id", uniqueId)
+		print("Added local player with id: " + str(uniqueId))
+	else:
+		print("Local player already exists or invalid ID: " + str(uniqueId))
 		
 	
 func _on_store_data_button_down():
@@ -280,14 +295,21 @@ func _on_button_button_down():
 	
 @rpc("any_peer", "call_local")
 func Ready(id):
+	# Validate ID before processing
+	if id <= 0:
+		print("Warning: Invalid player ID in Ready(): " + str(id))
+		return
 	
+	# Only create player if they don't exist and ID is valid
 	if !Players.has(id):
+		print("Warning: Player " + str(id) + " not found in Ready(), adding them")
 		Players[id] = {
 			"name" : id,
 			"ready" : 0
 		}
 		
 	Players[id].ready = 1
+	print("Player " + str(id) + " is ready")
 	if multiplayer.is_server():
 		var readyPlayers = 0
 		for i in Players:
@@ -312,10 +334,15 @@ func playerDisconnected(id):
 
 @rpc("any_peer")
 func notifyGameInProgress():
-	print("Recieved Progress")
+	print("Received Progress")
 	
 	var unique_id = multiplayer.get_unique_id()
+	if unique_id <= 0:
+		print("Warning: Invalid unique ID in notifyGameInProgress(): " + str(unique_id))
+		return
+		
 	if !Players.has(unique_id):
+		print("Adding player " + str(unique_id) + " during game in progress")
 		Players[unique_id] = {
 			"name" : unique_id,
 			"ready" : 1
@@ -323,7 +350,7 @@ func notifyGameInProgress():
 	else:
 		Players[unique_id].ready = 1
 	
-	print("starting game")
+	print("Starting game for player: " + str(unique_id))
 	OnStartGame.emit()
 	hide()
 
